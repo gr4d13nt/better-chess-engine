@@ -10,10 +10,28 @@
 namespace {
 
 engine::EngineVersion parse_version(int v) {
+  if (v == 5) {
+    return engine::EngineVersion::V5_MoveOrdering;
+  }
+  if (v == 4) {
+    return engine::EngineVersion::V4_Quiescence;
+  }
+  if (v == 3) {
+    return engine::EngineVersion::V3_ImprovedEval;
+  }
   return (v == 2) ? engine::EngineVersion::V2_AlphaBeta : engine::EngineVersion::V1_NoPruning;
 }
 
 const char* version_name(engine::EngineVersion v) {
+  if (v == engine::EngineVersion::V5_MoveOrdering) {
+    return "v5-move-ordering";
+  }
+  if (v == engine::EngineVersion::V4_Quiescence) {
+    return "v4-quiescence";
+  }
+  if (v == engine::EngineVersion::V3_ImprovedEval) {
+    return "v3-improved-eval";
+  }
   return v == engine::EngineVersion::V2_AlphaBeta ? "v2-alpha-beta" : "v1-no-pruning";
 }
 

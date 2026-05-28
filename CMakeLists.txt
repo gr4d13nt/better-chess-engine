@@ -10,7 +10,12 @@ add_library(engine STATIC
   src/attacks.cpp
   src/board.cpp
   src/movegen.cpp
-  src/search.cpp
+  src/search/search_common.cpp
+  src/search/search_dispatch.cpp
+  src/search/search_v1_no_pruning.cpp
+  src/search/search_v2_alpha_beta.cpp
+  src/search/search_v4_quiescence.cpp
+  src/search/search_v5_move_ordering.cpp
 )
 
 target_include_directories(engine PUBLIC

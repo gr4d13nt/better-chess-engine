@@ -8,6 +8,9 @@ namespace engine {
 enum class EngineVersion : int {
   V1_NoPruning = 1,
   V2_AlphaBeta = 2,
+  V3_ImprovedEval = 3,
+  V4_Quiescence = 4,
+  V5_MoveOrdering = 5,
 };
 
 struct SearchConfig {

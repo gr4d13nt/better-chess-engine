@@ -5,7 +5,7 @@ set -euo pipefail
 # Runs multiple self-play games between two engine versions and prints W/D/L.
 #
 # Usage:
-#   ./scripts/run_matches.sh [games_per_side] [depth] [max_plies] [movetime_ms] [fen_or_book]
+#   ./scripts/run_matches.sh [games_per_side] [depth] [max_plies] [movetime_ms] [fen_or_book] [version_a] [version_b]
 #
 # Defaults:
 #   games_per_side = 2
@@ -13,10 +13,15 @@ set -euo pipefail
 #   max_plies      = 120
 #   movetime_ms    = 0 (disabled)
 #   fen_or_book    = book (random from scripts/equal_openings.txt)
+#   version_a      = 1
+#   version_b      = 2
 #
-# Engine versions are currently fixed as:
+# Engine versions:
 #   v1 = no pruning
 #   v2 = alpha-beta
+#   v3 = improved eval
+#   v4 = quiescence (alpha-beta + qsearch)
+#   v5 = move ordering (v4 + ordered main/qsearch moves)
 
 GAMES_PER_SIDE="${1:-2}"
 DEPTH="${2:-3}"
@@ -33,6 +38,9 @@ if [[ $# -ge 4 ]]; then
   fi
 fi
 
+VERSION_A="${6:-1}"
+VERSION_B="${7:-2}"
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BIN="${ROOT_DIR}/build/selfplay_main"
 OPENINGS_FILE="${ROOT_DIR}/scripts/equal_openings.txt"
@@ -42,8 +50,8 @@ if [[ ! -x "${BIN}" ]]; then
   cmake --build "${ROOT_DIR}/build"
 fi
 
-v1_wins=0
-v2_wins=0
+version_a_wins=0
+version_b_wins=0
 draws=0
 
 pick_opening_fen() {
@@ -89,16 +97,16 @@ run_game() {
   fi
 
   if [[ "${result}" == "1-0" ]]; then
-    if [[ "${white_version}" -eq 1 ]]; then
-      v1_wins=$((v1_wins + 1))
+    if [[ "${white_version}" -eq "${VERSION_A}" ]]; then
+      version_a_wins=$((version_a_wins + 1))
     else
-      v2_wins=$((v2_wins + 1))
+      version_b_wins=$((version_b_wins + 1))
     fi
   elif [[ "${result}" == "0-1" ]]; then
-    if [[ "${black_version}" -eq 1 ]]; then
-      v1_wins=$((v1_wins + 1))
+    if [[ "${black_version}" -eq "${VERSION_A}" ]]; then
+      version_a_wins=$((version_a_wins + 1))
     else
-      v2_wins=$((v2_wins + 1))
+      version_b_wins=$((version_b_wins + 1))
     fi
   else
     draws=$((draws + 1))
@@ -108,21 +116,21 @@ run_game() {
     "${white_version}" "${black_version}" "${game_fen}" "${result_line}"
 }
 
-echo "Running matches: games_per_side=${GAMES_PER_SIDE}, depth=${DEPTH}, max_plies=${MAX_PLIES}, movetime_ms=${MOVETIME_MS}, fen_or_book=${FEN_OR_BOOK}"
+echo "Running matches: games_per_side=${GAMES_PER_SIDE}, depth=${DEPTH}, max_plies=${MAX_PLIES}, movetime_ms=${MOVETIME_MS}, fen_or_book=${FEN_OR_BOOK}, version_a=v${VERSION_A}, version_b=v${VERSION_B}"
 echo ""
 
 for ((i = 1; i <= GAMES_PER_SIDE; i++)); do
-  run_game 1 2
+  run_game "${VERSION_A}" "${VERSION_B}"
 done
 
 for ((i = 1; i <= GAMES_PER_SIDE; i++)); do
-  run_game 2 1
+  run_game "${VERSION_B}" "${VERSION_A}"
 done
 
 total_games=$((2 * GAMES_PER_SIDE))
 echo ""
 echo "=== Match Summary ==="
 echo "Total games: ${total_games}"
-echo "v1 wins: ${v1_wins}"
-echo "v2 wins: ${v2_wins}"
+echo "v${VERSION_A} wins: ${version_a_wins}"
+echo "v${VERSION_B} wins: ${version_b_wins}"
 echo "draws:   ${draws}"

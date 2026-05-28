@@ -23,8 +23,17 @@ int main(int argc, char** argv) {
   }
   if (argc > 3) {
     const int version = std::stoi(argv[3]);
-    cfg.version = (version == 2) ? engine::EngineVersion::V2_AlphaBeta
-                                 : engine::EngineVersion::V1_NoPruning;
+    if (version == 5) {
+      cfg.version = engine::EngineVersion::V5_MoveOrdering;
+    } else if (version == 4) {
+      cfg.version = engine::EngineVersion::V4_Quiescence;
+    } else if (version == 3) {
+      cfg.version = engine::EngineVersion::V3_ImprovedEval;
+    } else if (version == 2) {
+      cfg.version = engine::EngineVersion::V2_AlphaBeta;
+    } else {
+      cfg.version = engine::EngineVersion::V1_NoPruning;
+    }
   }
   if (argc > 4) {
     cfg.movetime_ms = std::stoi(argv[4]);
