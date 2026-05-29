@@ -1,0 +1,15 @@
+=== Worker 1 start ===
+Running matches: games_per_side=10, depth=8, max_plies=150, movetime_ms=50, fen_or_book=book, version_a=v7, version_b=v9
+
+Batch 1/2: v7 white, v9 black (10 games)
+Game (W:v7 vs B:v9) FEN='knbrqbnr/pp5p/2ppp1p1/5p2/2P1P3/3P2P1/PP3P1P/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v9) FEN='knbrqbnr/ppp4p/6p1/3ppp2/5P2/PPP1P3/3P2PP/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v9) FEN='knbrqbnr/pp4p1/3ppp1p/2p5/8/PP2PPP1/2PP3P/RNBQRBNK w - - 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v9) FEN='rnbqrbnk/p1p3pp/1p6/3ppp2/4P3/P1PP1P2/1P4PP/KNBRQBNR w - - 0 1' -> result 1-0 checkmate
+Game (W:v7 vs B:v9) FEN='knbrqbnr/1p4pp/p2p4/2p1pp2/8/PP1PP1P1/2P2P1P/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v9) FEN='rnbqrbnk/p2p1p1p/1pp3p1/4p3/2P5/1P1PP1P1/P4P1P/KNBRQBNR w - - 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v9) FEN='rnbqrbnk/2p3pp/pp1pp3/5p2/2P2P2/PP1P4/4P1PP/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v9) FEN='knbrqbnr/2p2ppp/pp2p3/3p4/8/1PP1P1PP/P2P1P2/RNBQRBNK w - - 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v9) FEN='knbrqbnr/p1p3p1/1p1p3p/4pp2/4P3/P4PP1/1PPP3P/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v9) FEN='rnbqrbnk/1p4pp/p2ppp2/2p5/8/1PPPPP2/P5PP/KNBRQBNR w - - 0 1' -> result 1-0 checkmate
+/Users/alanxie/Projects/Chess Engine/scripts/run_matches.sh: line 149: syntax error near unexpected token `('

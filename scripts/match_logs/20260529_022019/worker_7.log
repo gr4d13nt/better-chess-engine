@@ -1,0 +1,29 @@
+=== Worker 7 start ===
+Running matches: games_per_side=25, depth=8, max_plies=150, movetime_ms=40, fen_or_book=book, version_a=v7, version_b=v8
+
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/p1p3p1/1p1pp2p/5p2/8/1P1P1PPP/P1P1P3/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/p5pp/1p1ppp2/2p5/4P3/1PPP1P2/P5PP/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/1pp2p1p/p2p2p1/4p3/2P2P2/1P1P2P1/P3P2P/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='knbrqbnr/1p2p2p/p1pp2p1/5p2/4P3/P2P2P1/1PP2P1P/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='knbrqbnr/1p3ppp/p1p1p3/3p4/4PP2/1P4P1/P1PP3P/RNBQRBNK w - - 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/p4p1p/1p1pp1p1/2p5/4P3/PP1P1P2/2P3PP/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/p1p2p2/1p2p1pp/3p4/8/P1PPP1P1/1P3P1P/KNBRQBNR w - - 0 1' -> result 1-0 checkmate
+Game (W:v7 vs B:v8) FEN='knbrqbnr/pp3p2/3pp1pp/2p5/2P2P2/3PP2P/PP4P1/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='knbrqbnr/pp4p1/3ppp1p/2p5/4PP2/1P1P4/P1P3PP/RNBQRBNK w - - 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/3p2pp/pp2pp2/2p5/2P1P3/3P1P1P/PP4P1/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='knbrqbnr/p3p1pp/1p6/2pp1p2/8/2PPP1PP/PP3P2/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/3p2pp/ppp1p3/5p2/2P2P2/PP1P4/4P1PP/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/p4pp1/1pp1p2p/3p4/8/2PPPP1P/PP4P1/KNBRQBNR w - - 0 1' -> result 1-0 checkmate
+Game (W:v7 vs B:v8) FEN='knbrqbnr/1p4pp/p2pp3/2p2p2/2P5/1P2PPP1/P2P3P/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='knbrqbnr/pp4p1/3pp2p/2p2p2/2P2P2/3PP2P/PP4P1/RNBQRBNK w - - 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/pp4pp/3p4/2p1pp2/8/3PPPPP/PPP5/KNBRQBNR w - c6 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='knbrqbnr/pp2pp2/2p3pp/3p4/8/1PPPP2P/P4PP1/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/pp3pp1/7p/2ppp3/5P2/2PPP1P1/PP5P/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='knbrqbnr/pp5p/3pppp1/2p5/5P2/P2PP1P1/1PP4P/RNBQRBNK w - c6 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/1pp3pp/p2p1p2/4p3/3P4/PP2P3/2P2PPP/KNBRQBNR w - - 0 1' -> result 1-0 checkmate
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/1p1p1p1p/p5p1/2p1p3/8/1P1PP1PP/P1P2P2/KNBRQBNR w - - 0 1' -> result 1-0 checkmate
+Game (W:v7 vs B:v8) FEN='knbrqbnr/pp5p/2pp1pp1/4p3/3PPP2/1P6/P1P3PP/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/p4ppp/1p6/2ppp3/4P3/1PPP1P2/P5PP/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v8) FEN='knbrqbnr/p3p1pp/1pp2p2/3p4/5P2/2PPP2P/PP4P1/RNBQRBNK w - - 0 1' -> result 1-0 checkmate
+Game (W:v7 vs B:v8) FEN='rnbqrbnk/5ppp/ppppp3/8/2P5/3PPP1P/PP4P1/KNBRQBNR w - - 0 1' -> result 0-1 checkmate
+/Users/alanxie/Projects/Chess Engine/scripts/run_matches.sh: line 128: syntax error near unexpected token `)'

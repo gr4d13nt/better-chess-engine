@@ -1,0 +1,32 @@
+=== Worker 3 start ===
+Running matches: games_per_side=10, depth=8, max_plies=150, movetime_ms=50, fen_or_book=book, version_a=v7, version_b=v9
+
+Batch 1/2: v7 white, v9 black (10 games)
+Game (W:v7 vs B:v9) FEN='knbrqbnr/p1p3p1/1p1p3p/4pp2/4P3/P4PP1/1PPP3P/RNBQRBNK w - - 0 1' -> result 1-0 checkmate
+Game (W:v7 vs B:v9) FEN='rnbqrbnk/p5pp/1p1pp3/2p2p2/2P1P3/1P1P3P/P4PP1/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v9) FEN='knbrqbnr/1pp1p2p/p5p1/3p1p2/4P3/P4PP1/1PPP3P/RNBQRBNK w - - 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v9) FEN='rnbqrbnk/1p4pp/p1p1pp2/3p4/3P4/P1P1P3/1P3PPP/KNBRQBNR w - - 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v9) FEN='rnbqrbnk/3p2pp/pp2pp2/2p5/2P2P2/3PP1P1/PP5P/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v9) FEN='knbrqbnr/1p4pp/p2pp3/2p2p2/8/1P1PP1PP/P1P2P2/RNBQRBNK w - - 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v9) FEN='knbrqbnr/1pp4p/p2p2p1/4pp2/2P5/1P1PPP2/P5PP/RNBQRBNK w - - 0 1' -> result 0-1 checkmate
+Game (W:v7 vs B:v9) FEN='rnbqrbnk/3p2pp/ppp1p3/5p2/2PP4/1P3P2/P3P1PP/KNBRQBNR w - - 0 1' -> result 1-0 checkmate
+Game (W:v7 vs B:v9) FEN='rnbqrbnk/p5pp/1p2pp2/2pp4/3PP3/P4P2/1PP3PP/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v9) FEN='knbrqbnr/p5pp/1p1p4/2p1pp2/2P1P3/PP6/3P1PPP/RNBQRBNK w - - 0 1' -> result 0-1 checkmate
+Batch 2/2: v9 white, v7 black (10 games)
+Game (W:v9 vs B:v7) FEN='rnbqrbnk/pp5p/2p1ppp1/3p4/2P1P3/1P1P1P2/P5PP/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v9 vs B:v7) FEN='knbrqbnr/2p2ppp/pp6/3pp3/2P2P2/4P1PP/PP1P4/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v9 vs B:v7) FEN='rnbqrbnk/2p3pp/pp2p3/3p1p2/2P1P3/3P2PP/PP3P2/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v9 vs B:v7) FEN='rnbqrbnk/pppp4/5ppp/4p3/2P5/1P1P1PP1/P3P2P/KNBRQBNR w - - 0 1' -> result 1-0 checkmate
+Game (W:v9 vs B:v7) FEN='knbrqbnr/pp3pp1/7p/2ppp3/4P3/2P2PP1/PP1P3P/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v9 vs B:v7) FEN='rnbqrbnk/pp3p1p/2p3p1/3pp3/2P5/3PPPP1/PP5P/KNBRQBNR w - - 0 1' -> result 0-1 checkmate
+Game (W:v9 vs B:v7) FEN='rnbqrbnk/5ppp/ppp1p3/3p4/4PP2/P1PP4/1P4PP/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v9 vs B:v7) FEN='knbrqbnr/pp4pp/2p5/3ppp2/2P1P3/1P4P1/P2P1P1P/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v9 vs B:v7) FEN='rnbqrbnk/1p3p1p/p1p1p1p1/3p4/2PP4/P4P2/1P2P1PP/KNBRQBNR w - - 0 1' -> result 1/2-1/2 max-plies
+Game (W:v9 vs B:v7) FEN='knbrqbnr/2p1pp1p/pp4p1/3p4/3P1P2/1P2P1P1/P1P4P/RNBQRBNK w - - 0 1' -> result 1/2-1/2 max-plies
+
+=== Match Summary ===
+Total games: 20
+v7 wins: 3
+v9 wins: 6
+draws:   11
+=== Worker 3 end ===

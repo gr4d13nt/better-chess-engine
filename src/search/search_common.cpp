@@ -70,7 +70,7 @@ constexpr int kQueenPst[64] = {
    -20, -10, -10,  -5,  -5, -10, -10, -20,
 };
 
-constexpr int kKingPst[64] = {
+constexpr int kKingPstMg[64] = {
     20,  30,  10,   0,   0,  10,  30,  20,
     20,  20,   0,   0,   0,   0,  20,  20,
    -10, -20, -20, -20, -20, -20, -20, -10,
@@ -81,25 +81,54 @@ constexpr int kKingPst[64] = {
    -30, -40, -40, -50, -50, -40, -40, -30,
 };
 
+constexpr int kKingPstEg[64] = {
+   -50, -30, -30, -30, -30, -30, -30, -50,
+   -30, -20, -10, -10, -10, -10, -20, -30,
+   -30, -10,  10,  15,  15,  10, -10, -30,
+   -30, -10,  15,  25,  25,  15, -10, -30,
+   -30, -10,  15,  25,  25,  15, -10, -30,
+   -30, -10,  10,  15,  15,  10, -10, -30,
+   -30, -20, -10, -10, -10, -10, -20, -30,
+   -50, -40, -30, -20, -20, -30, -40, -50,
+};
+
+constexpr int kEgMobilityScale = 2;
+
 int mirror_square(int sq) {
   const int file = sq & 7;
   const int rank = sq >> 3;
   return (7 - rank) * 8 + file;
 }
 
-int pst_value(PieceType pt, int sq) {
+int pst_value_mg(PieceType pt, int sq) {
   switch (pt) {
     case PieceType::Pawn: return kPawnPst[sq];
     case PieceType::Knight: return kKnightPst[sq];
     case PieceType::Bishop: return kBishopPst[sq];
     case PieceType::Rook: return kRookPst[sq];
     case PieceType::Queen: return kQueenPst[sq];
-    case PieceType::King: return kKingPst[sq];
+    case PieceType::King: return kKingPstMg[sq];
     default: return 0;
   }
 }
 
-int mobility_score(const Board& board, Color c) {
+int pst_value_eg(PieceType pt, int sq, Color c) {
+  switch (pt) {
+    case PieceType::Pawn: {
+      const int rank = sq >> 3;
+      const int advancement = c == Color::White ? rank : (7 - rank);
+      return kPawnPst[sq] + advancement * 4;
+    }
+    case PieceType::Knight: return kKnightPst[sq];
+    case PieceType::Bishop: return kBishopPst[sq];
+    case PieceType::Rook: return kRookPst[sq];
+    case PieceType::Queen: return kQueenPst[sq];
+    case PieceType::King: return kKingPstEg[sq];
+    default: return 0;
+  }
+}
+
+int mobility_score(const Board& board, Color c, int weight_scale) {
   const Bitboard occ = board.occupied();
   const Bitboard own = board.color_bb(c);
   int score = 0;
@@ -109,7 +138,7 @@ int mobility_score(const Board& board, Color c) {
     while (pieces) {
       const Square sq = bb::pop_lsb(pieces);
       const Bitboard attacks = attack_fn(sq) & ~own;
-      score += bb::popcount(attacks) * kMobilityWeight[static_cast<int>(pt)];
+      score += bb::popcount(attacks) * kMobilityWeight[static_cast<int>(pt)] * weight_scale;
     }
   };
 
@@ -119,6 +148,30 @@ int mobility_score(const Board& board, Color c) {
   add_mobility(PieceType::Queen, [&](Square sq) { return queen_attacks(sq, occ); });
 
   return score;
+}
+
+void accumulate_improved_side(const Board& board, Color c, int& mg, int& eg) {
+  mg = 0;
+  eg = 0;
+
+  for (int pt = 0; pt < kNumPieceTypes; ++pt) {
+    const PieceType piece_type = static_cast<PieceType>(pt);
+    const int base = kPieceValues[pt];
+    Bitboard pieces = board.pieces(c, piece_type);
+    while (pieces) {
+      const int sq = square_index(bb::pop_lsb(pieces));
+      const int mirrored = mirror_square(sq);
+      mg += base + pst_value_mg(piece_type, c == Color::White ? sq : mirrored);
+      eg += base + pst_value_eg(piece_type, c == Color::White ? sq : mirrored, c);
+    }
+  }
+
+  if (bb::popcount(board.pieces(c, PieceType::Bishop)) >= 2) {
+    mg += 30;
+  }
+
+  mg += mobility_score(board, c, 1);
+  eg += mobility_score(board, c, kEgMobilityScale);
 }
 
 }  // namespace
@@ -160,11 +213,11 @@ int evaluate_improved(const Board& board) {
     Bitboard b = board.pieces(Color::Black, piece_type);
     while (w) {
       const int sq = square_index(bb::pop_lsb(w));
-      white += base + pst_value(piece_type, sq);
+      white += base + pst_value_mg(piece_type, sq);
     }
     while (b) {
       const int sq = square_index(bb::pop_lsb(b));
-      black += base + pst_value(piece_type, mirror_square(sq));
+      black += base + pst_value_mg(piece_type, mirror_square(sq));
     }
   }
 
@@ -175,15 +228,34 @@ int evaluate_improved(const Board& board) {
     black += 30;
   }
 
-  white += mobility_score(board, Color::White);
-  black += mobility_score(board, Color::Black);
+  white += mobility_score(board, Color::White, 1);
+  black += mobility_score(board, Color::Black, 1);
   return white - black;
 }
 
+void evaluate_improved_split(const Board& board, int& mg_white, int& eg_white, int& mg_black,
+                             int& eg_black) {
+  accumulate_improved_side(board, Color::White, mg_white, eg_white);
+  accumulate_improved_side(board, Color::Black, mg_black, eg_black);
+}
+
 int evaluate_for_side_to_move(const Board& board, EngineVersion eval_profile) {
-  const int white_eval =
-      eval_profile == EngineVersion::V3_ImprovedEval ? evaluate_improved(board)
-                                                     : evaluate_material_only(board);
+  int white_eval = 0;
+  if (eval_profile == EngineVersion::V13_MopUpEval) {
+    white_eval = evaluate_v13(board);
+  } else if (eval_profile == EngineVersion::V9_RookPlacement) {
+    white_eval = evaluate_v9(board);
+  } else if (eval_profile == EngineVersion::V8_KnightOutposts) {
+    white_eval = evaluate_v8(board);
+  } else if (eval_profile == EngineVersion::V7_PhasedEval) {
+    white_eval = evaluate_v7(board);
+  } else if (eval_profile == EngineVersion::V6_PawnKingEval) {
+    white_eval = evaluate_v6(board);
+  } else if (eval_profile == EngineVersion::V3_ImprovedEval) {
+    white_eval = evaluate_improved(board);
+  } else {
+    white_eval = evaluate_material_only(board);
+  }
   return board.side_to_move() == Color::White ? white_eval : -white_eval;
 }
 

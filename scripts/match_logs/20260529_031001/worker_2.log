@@ -1,0 +1,16 @@
+=== Worker 2 start ===
+Running matches: games_per_side=2, depth=4, max_plies=60, movetime_ms=0, fen_or_book=book, version_a=v7, version_b=v9
+
+Batch 1/2: v7 white vs v9 black, 2 games
+Game (W:v7 vs B:v9) FEN=knbrqbnr/pp4p1/2pp1p1p/4p3/2P1P3/5PP1/PP1P3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v7 vs B:v9) FEN=rnbqrbnk/2p2ppp/pp6/3pp3/2P5/3PPPP1/PP5P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Batch 2/2: v9 white vs v7 black, 2 games
+Game (W:v9 vs B:v7) FEN=knbrqbnr/pp4p1/2pp1p1p/4p3/2P1PP2/1P6/P2P2PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v9 vs B:v7) FEN=rnbqrbnk/1pp3pp/p7/3ppp2/3PP3/P1P5/1P3PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+
+=== Match Summary ===
+Total games: 4
+v7 wins: 0
+v9 wins: 0
+draws:   4
+=== Worker 2 end ===

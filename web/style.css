@@ -1,0 +1,280 @@
+:root {
+  color-scheme: light dark;
+  --bg: #1b1f24;
+  --panel: #252b33;
+  --text: #eef2f7;
+  --muted: #9aa7b8;
+  --accent: #4f8cff;
+  --border: #3a4452;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at top, #2a3340, var(--bg));
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 560px) minmax(280px, 420px);
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.board-panel,
+.controls {
+  background: color-mix(in srgb, var(--panel) 92%, white 8%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.board-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+#board {
+  width: 100%;
+}
+
+/* Legal move / selection highlights (chessboard.js squares) */
+#board .highlight-selected {
+  box-shadow: inset 0 0 0 4px rgba(79, 140, 255, 0.95);
+}
+
+#board .highlight-legal {
+  background: radial-gradient(circle, rgba(120, 190, 90, 0.95) 18%, rgba(0, 0, 0, 0) 19%) !important;
+}
+
+#board .highlight-capture {
+  background:
+    radial-gradient(circle, rgba(0, 0, 0, 0) 58%, rgba(230, 90, 90, 0.85) 59%, rgba(230, 90, 90, 0.85) 72%, rgba(0, 0, 0, 0) 73%),
+    radial-gradient(circle, rgba(120, 190, 90, 0.75) 18%, rgba(0, 0, 0, 0) 19%) !important;
+}
+
+#board .highlight-last-from {
+  background-color: rgba(255, 220, 90, 0.45) !important;
+}
+
+#board .highlight-last-to {
+  box-shadow: inset 0 0 0 4px rgba(255, 220, 90, 0.85);
+}
+
+.game-over {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px;
+  text-align: center;
+  background: rgba(10, 14, 20, 0.78);
+  border-radius: 8px;
+  backdrop-filter: blur(2px);
+}
+
+.game-over.hidden {
+  display: none;
+}
+
+.game-over-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.game-over-subtitle {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.game-over.win .game-over-title {
+  color: #7ddea8;
+}
+
+.game-over.loss .game-over-title {
+  color: #ff8a8a;
+}
+
+.game-over.draw .game-over-title {
+  color: #ffd56b;
+}
+
+.game-over.checkmate .game-over-title {
+  color: #ffd56b;
+}
+
+.game-over button {
+  min-width: 140px;
+  background: #151a20;
+}
+
+.status {
+  margin: 16px 0 0;
+  color: var(--muted);
+  min-height: 1.5em;
+}
+
+.eval-panel {
+  margin-top: 14px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.eval-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+}
+
+.eval-label {
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.eval-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--text);
+}
+
+.eval-text.thinking {
+  color: var(--muted);
+}
+
+.eval-bar {
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #111;
+  border: 1px solid var(--border);
+}
+
+.eval-bar-white {
+  height: 100%;
+  min-width: 2%;
+  background: linear-gradient(90deg, #d8dee8, #ffffff);
+  transition: width 0.25s ease;
+}
+
+.controls h1 {
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 0.92rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+select,
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #151a20;
+  color: var(--text);
+}
+
+.fen-label input {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.82rem;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.buttons.three-up {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+button {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #151a20;
+  color: var(--text);
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.help {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  min-width: 280px;
+}
+
+.promotion-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

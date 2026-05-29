@@ -2,6 +2,7 @@
 
 #include "engine/attacks.hpp"
 #include "engine/movegen.hpp"
+#include "engine/zobrist.hpp"
 
 #include <sstream>
 #include <stdexcept>
@@ -80,6 +81,12 @@ void Board::clear() {
   castling_rights_ = 0;
   halfmove_clock_ = 0;
   fullmove_number_ = 1;
+  zobrist_key_ = 0;
+}
+
+void Board::refresh_zobrist() {
+  init_zobrist();
+  zobrist_key_ = zobrist_hash(*this);
 }
 
 void Board::refresh_derived() {
@@ -168,6 +175,7 @@ bool Board::set_fen(const std::string& fen) {
 
   ss >> halfmove_clock_ >> fullmove_number_;
   refresh_derived();
+  refresh_zobrist();
   return true;
 }
 
@@ -310,6 +318,7 @@ void Board::make_move(const Move& move, Undo& undo) {
   }
   side_ = them;
   refresh_derived();
+  refresh_zobrist();
 }
 
 void Board::unmake_move(const Move& move, const Undo& undo) {
@@ -354,6 +363,7 @@ void Board::unmake_move(const Move& move, const Undo& undo) {
     fullmove_number_--;
   }
   refresh_derived();
+  refresh_zobrist();
 }
 
 bool Board::is_checkmate() const {

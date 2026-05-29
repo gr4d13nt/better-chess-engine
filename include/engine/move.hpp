@@ -38,6 +38,10 @@ struct MoveList {
   void clear() { count = 0; }
 };
 
+inline bool moves_equal(const Move& a, const Move& b) {
+  return a.from == b.from && a.to == b.to && a.flag == b.flag && a.promotion == b.promotion;
+}
+
 std::string move_to_uci(const Move& m);
 
 }  // namespace engine

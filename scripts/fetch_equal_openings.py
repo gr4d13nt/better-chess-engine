@@ -11,7 +11,7 @@ Usage:
 
 Examples:
   ./scripts/fetch_equal_openings.py
-  ./scripts/fetch_equal_openings.py 64
+  ./scripts/fetch_equal_openings.py 512
   ./scripts/fetch_equal_openings.py 128 scripts/equal_openings.txt 42
 """
 
@@ -60,7 +60,7 @@ def fetch_lines(url: str) -> list[str]:
 
 
 def main() -> int:
-    count = int(sys.argv[1]) if len(sys.argv) > 1 else 64
+    count = int(sys.argv[1]) if len(sys.argv) > 1 else 256
     out_file = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("scripts/equal_openings.txt")
     seed = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 

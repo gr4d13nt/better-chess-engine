@@ -5,6 +5,7 @@
 #include "engine/types.hpp"
 
 #include <array>
+#include <cstdint>
 #include <string>
 
 namespace engine {
@@ -29,6 +30,7 @@ class Board {
   Color side_to_move() const { return side_; }
   Square ep_square() const { return ep_square_; }
   std::uint8_t castling_rights() const { return castling_rights_; }
+  std::uint64_t zobrist() const { return zobrist_key_; }
 
   Bitboard pieces(Color c, PieceType pt) const { return pieces_[static_cast<int>(c)][static_cast<int>(pt)]; }
   Bitboard color_bb(Color c) const { return color_bb_[static_cast<int>(c)]; }
@@ -60,6 +62,9 @@ class Board {
   std::uint8_t castling_rights_ = 0;
   int halfmove_clock_ = 0;
   int fullmove_number_ = 1;
+  std::uint64_t zobrist_key_ = 0;
+
+  void refresh_zobrist();
 };
 
 }  // namespace engine

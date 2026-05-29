@@ -1,0 +1,12 @@
+=== Worker 2 start ===
+Running matches: games_per_side=1, depth=4, max_plies=40, movetime_ms=40, fen_or_book=startpos, version_a=v5, version_b=v6
+
+Game (W:v5 vs B:v6) FEN='startpos' -> result 1/2-1/2 max-plies
+Game (W:v6 vs B:v5) FEN='startpos' -> result 1/2-1/2 max-plies
+
+=== Match Summary ===
+Total games: 2
+v5 wins: 0
+v6 wins: 0
+draws:   2
+=== Worker 2 end ===

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess Engine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="board-panel">
+        <div class="board-wrap">
+          <div id="board"></div>
+          <div id="game-over" class="game-over hidden" aria-live="polite">
+            <p id="game-over-title" class="game-over-title">Checkmate</p>
+            <p id="game-over-subtitle" class="game-over-subtitle">You lose.</p>
+            <button id="game-over-new" type="button">New game</button>
+          </div>
+        </div>
+        <div class="eval-panel" aria-live="polite">
+          <div class="eval-header">
+            <span class="eval-label">Stockfish</span>
+            <span id="sf-eval-text" class="eval-text">loading…</span>
+          </div>
+          <div class="eval-bar" title="White advantage →">
+            <div id="sf-eval-bar" class="eval-bar-white" style="width: 50%"></div>
+          </div>
+        </div>
+        <p id="status" class="status">Ready.</p>
+      </section>
+
+      <section class="controls">
+        <h1>Chess Engine</h1>
+
+        <label>
+          Mode
+          <select id="mode">
+            <option value="human-white">You play White vs Engine</option>
+            <option value="human-black">You play Black vs Engine</option>
+            <option value="engine">Engine vs Engine</option>
+          </select>
+        </label>
+
+        <div class="row">
+          <label>
+            White version
+            <select id="white-version"></select>
+          </label>
+          <label>
+            Black version
+            <select id="black-version"></select>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            Depth
+            <input id="depth" type="number" min="1" max="20" value="6" />
+          </label>
+          <label>
+            Movetime (ms)
+            <input id="movetime" type="number" min="0" step="50" value="0" />
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            Auto-play delay (ms)
+            <input id="delay" type="number" min="100" step="100" value="800" />
+          </label>
+        </div>
+
+        <label class="fen-label">
+          Start from FEN
+          <input id="start-fen" type="text" spellcheck="false"
+            placeholder="e.g. 4k3/8/8/8/8/8/4R3/4K3 w - - 0 1" />
+        </label>
+
+        <div class="buttons">
+          <button id="load-fen" type="button">Load position</button>
+          <button id="new-game" type="button">New game</button>
+          <button id="engine-move" type="button">Engine move</button>
+          <button id="toggle-auto" type="button">Start auto-play</button>
+          <button id="flip" type="button">Flip board</button>
+        </div>
+
+        <div class="help">
+          <p><strong>Custom position:</strong> paste a FEN and click Load position.</p>
+          <p><strong>Human vs engine:</strong> click or drag pieces on your turn; legal moves show as green dots.</p>
+          <p><strong>Review:</strong> use ← → arrow keys to step through moves (last move highlighted in yellow).</p>
+          <p><strong>Stockfish eval:</strong> bar and score update for the current position (including ← → review).</p>
+          <p><strong>Engine vs engine:</strong> choose versions, then Start auto-play.</p>
+        </div>
+      </section>
+    </main>
+
+    <div id="promotion-modal" class="modal hidden">
+      <div class="modal-card">
+        <p>Promote to:</p>
+        <div class="promotion-buttons">
+          <button data-piece="q" type="button">Queen</button>
+          <button data-piece="r" type="button">Rook</button>
+          <button data-piece="b" type="button">Bishop</button>
+          <button data-piece="n" type="button">Knight</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+    <script src="stockfish-eval.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

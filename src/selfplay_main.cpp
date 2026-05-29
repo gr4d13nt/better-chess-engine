@@ -10,6 +10,30 @@
 namespace {
 
 engine::EngineVersion parse_version(int v) {
+  if (v == 13) {
+    return engine::EngineVersion::V13_MopUpEval;
+  }
+  if (v == 12) {
+    return engine::EngineVersion::V12_CheckExtension;
+  }
+  if (v == 11) {
+    return engine::EngineVersion::V11_TTHashMove;
+  }
+  if (v == 10) {
+    return engine::EngineVersion::V10_TranspositionTable;
+  }
+  if (v == 9) {
+    return engine::EngineVersion::V9_RookPlacement;
+  }
+  if (v == 8) {
+    return engine::EngineVersion::V8_KnightOutposts;
+  }
+  if (v == 7) {
+    return engine::EngineVersion::V7_PhasedEval;
+  }
+  if (v == 6) {
+    return engine::EngineVersion::V6_PawnKingEval;
+  }
   if (v == 5) {
     return engine::EngineVersion::V5_MoveOrdering;
   }
@@ -23,6 +47,30 @@ engine::EngineVersion parse_version(int v) {
 }
 
 const char* version_name(engine::EngineVersion v) {
+  if (v == engine::EngineVersion::V13_MopUpEval) {
+    return "v13-mop-up-eval";
+  }
+  if (v == engine::EngineVersion::V12_CheckExtension) {
+    return "v12-check-extension";
+  }
+  if (v == engine::EngineVersion::V11_TTHashMove) {
+    return "v11-tt-hash-move";
+  }
+  if (v == engine::EngineVersion::V10_TranspositionTable) {
+    return "v10-transposition-table";
+  }
+  if (v == engine::EngineVersion::V9_RookPlacement) {
+    return "v9-rook-placement";
+  }
+  if (v == engine::EngineVersion::V8_KnightOutposts) {
+    return "v8-knight-outposts";
+  }
+  if (v == engine::EngineVersion::V7_PhasedEval) {
+    return "v7-phased-eval";
+  }
+  if (v == engine::EngineVersion::V6_PawnKingEval) {
+    return "v6-pawn-king-eval";
+  }
   if (v == engine::EngineVersion::V5_MoveOrdering) {
     return "v5-move-ordering";
   }

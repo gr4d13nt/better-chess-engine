@@ -11,6 +11,14 @@ enum class EngineVersion : int {
   V3_ImprovedEval = 3,
   V4_Quiescence = 4,
   V5_MoveOrdering = 5,
+  V6_PawnKingEval = 6,
+  V7_PhasedEval = 7,
+  V8_KnightOutposts = 8,
+  V9_RookPlacement = 9,
+  V10_TranspositionTable = 10,
+  V11_TTHashMove = 11,
+  V12_CheckExtension = 12,
+  V13_MopUpEval = 13,
 };
 
 struct SearchConfig {

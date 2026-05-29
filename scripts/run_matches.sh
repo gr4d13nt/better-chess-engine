@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Requires bash (process substitution, [[ ]], arrays).
+if [[ -z "${BASH_VERSION:-}" ]]; then
+  exec /usr/bin/env bash "$0" "$@"
+fi
 
 set -euo pipefail
 
@@ -22,6 +26,14 @@ set -euo pipefail
 #   v3 = improved eval
 #   v4 = quiescence (alpha-beta + qsearch)
 #   v5 = move ordering (v4 + ordered main/qsearch moves)
+#   v6 = v5 search + pawn structure & king safety eval
+#   v7 = v5 search + phased/tapered eval (MG/EG) + v6 terms + tempo
+#   v8 = v7 eval + knight outpost bonuses
+#   v9 = v8 eval + rook on open/semi-open files; rank handled by rook PST
+#   v10 = v5 search + transposition table; v7 phased eval only
+#   v11 = v10 + TT hash-move ordering + iterative-deepening PV move at root
+#   v12 = v11 + one-ply check extension per line (max 1)
+#   v13 = v12 search + v7 eval + endgame mop-up (king approach / drive to edge)
 
 GAMES_PER_SIDE="${1:-2}"
 DEPTH="${2:-3}"
@@ -40,6 +52,15 @@ fi
 
 VERSION_A="${6:-1}"
 VERSION_B="${7:-2}"
+
+if ! [[ "${GAMES_PER_SIDE}" =~ ^[0-9]+$ ]] || [[ "${GAMES_PER_SIDE}" -lt 1 ]]; then
+  echo "ERROR: games_per_side must be a positive integer (got '${GAMES_PER_SIDE}')." >&2
+  exit 1
+fi
+if ! [[ "${VERSION_A}" =~ ^[0-9]+$ ]] || ! [[ "${VERSION_B}" =~ ^[0-9]+$ ]]; then
+  echo "ERROR: version_a and version_b must be integers." >&2
+  exit 1
+fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BIN="${ROOT_DIR}/build/selfplay_main"
@@ -112,20 +133,29 @@ run_game() {
     draws=$((draws + 1))
   fi
 
-  printf "Game (W:v%s vs B:v%s) FEN='%s' -> %s\n" \
+  # %q safely escapes FEN for display (no fragile single-quote wrapping).
+  printf 'Game (W:v%s vs B:v%s) FEN=%q -> %s\n' \
     "${white_version}" "${black_version}" "${game_fen}" "${result_line}"
+}
+
+run_games_for_side() {
+  local white_version="$1"
+  local black_version="$2"
+  local i
+
+  for i in $(seq 1 "${GAMES_PER_SIDE}"); do
+    run_game "${white_version}" "${black_version}"
+  done
 }
 
 echo "Running matches: games_per_side=${GAMES_PER_SIDE}, depth=${DEPTH}, max_plies=${MAX_PLIES}, movetime_ms=${MOVETIME_MS}, fen_or_book=${FEN_OR_BOOK}, version_a=v${VERSION_A}, version_b=v${VERSION_B}"
 echo ""
 
-for ((i = 1; i <= GAMES_PER_SIDE; i++)); do
-  run_game "${VERSION_A}" "${VERSION_B}"
-done
+echo "Batch 1/2: v${VERSION_A} white vs v${VERSION_B} black, ${GAMES_PER_SIDE} games"
+run_games_for_side "${VERSION_A}" "${VERSION_B}"
 
-for ((i = 1; i <= GAMES_PER_SIDE; i++)); do
-  run_game "${VERSION_B}" "${VERSION_A}"
-done
+echo "Batch 2/2: v${VERSION_B} white vs v${VERSION_A} black, ${GAMES_PER_SIDE} games"
+run_games_for_side "${VERSION_B}" "${VERSION_A}"
 
 total_games=$((2 * GAMES_PER_SIDE))
 echo ""
