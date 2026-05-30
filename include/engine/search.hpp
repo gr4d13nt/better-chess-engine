@@ -25,6 +25,8 @@ enum class EngineVersion : int {
   V14_RepetitionDraw = 14,
   V15_PiecePlacement = 15,
   V16_SeeQsearch = 16,
+  V17_DeltaQsearch = 17,
+  V18_NullMove = 18,
 };
 
 struct SearchConfig {

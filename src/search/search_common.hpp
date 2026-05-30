@@ -60,6 +60,10 @@ bool negamax_v14_tt(Board& board, int depth, int alpha, int beta, SearchState& s
 
 bool negamax_v16_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 
+bool negamax_v17_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v18_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
 void prioritize_move(MoveList& moves, const Move& prefer);
 
 }  // namespace engine::search_common

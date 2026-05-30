@@ -12,6 +12,12 @@
 namespace {
 
 engine::EngineVersion parse_version(int v) {
+  if (v == 18) {
+    return engine::EngineVersion::V18_NullMove;
+  }
+  if (v == 17) {
+    return engine::EngineVersion::V17_DeltaQsearch;
+  }
   if (v == 16) {
     return engine::EngineVersion::V16_SeeQsearch;
   }
@@ -58,6 +64,12 @@ engine::EngineVersion parse_version(int v) {
 }
 
 const char* version_name(engine::EngineVersion v) {
+  if (v == engine::EngineVersion::V18_NullMove) {
+    return "v18-null-move";
+  }
+  if (v == engine::EngineVersion::V17_DeltaQsearch) {
+    return "v17-delta-qsearch";
+  }
   if (v == engine::EngineVersion::V16_SeeQsearch) {
     return "v16-see-qsearch";
   }

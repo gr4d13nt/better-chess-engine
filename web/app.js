@@ -1,4 +1,6 @@
 const VERSIONS = [
+  { id: 18, label: "v18 null move" },
+  { id: 17, label: "v17 delta qsearch" },
   { id: 16, label: "v16 SEE qsearch" },
   { id: 15, label: "v15 piece placement" },
   { id: 14, label: "v14 repetition draw" },
@@ -574,7 +576,7 @@ function onKeyDown(event) {
   }
 }
 
-fillVersionSelect(whiteVersionEl, 16);
+fillVersionSelect(whiteVersionEl, 18);
 fillVersionSelect(blackVersionEl, 12);
 
 document.getElementById("new-game").addEventListener("click", resetGame);

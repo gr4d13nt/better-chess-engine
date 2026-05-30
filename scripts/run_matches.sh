@@ -37,6 +37,8 @@ set -euo pipefail
 #   v14 = v13 search/eval + treat revisiting any prior position as a draw in search
 #   v15 = v14 search + v9 piece terms (knight/rook/bishop) + v13 mop-up eval
 #   v16 = v15 search/eval + SEE pruning for losing captures in qsearch (depth>=1 only)
+#   v17 = v16 search + delta pruning for hopeless captures in qsearch (qdepth>=1, margin 150)
+#   v18 = v17 search + null-move pruning in main search (depth>=3, R=2/3)
 
 GAMES_PER_SIDE="${1:-2}"
 DEPTH="${2:-3}"

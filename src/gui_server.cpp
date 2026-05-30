@@ -21,6 +21,10 @@ namespace {
 
 std::optional<engine::EngineVersion> parse_version(int v) {
   switch (v) {
+    case 18:
+      return engine::EngineVersion::V18_NullMove;
+    case 17:
+      return engine::EngineVersion::V17_DeltaQsearch;
     case 16:
       return engine::EngineVersion::V16_SeeQsearch;
     case 15:

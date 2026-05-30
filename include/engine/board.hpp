@@ -20,6 +20,11 @@ struct Undo {
   Bitboard captured_bb = 0;
 };
 
+struct NullUndo {
+  Square ep_square = Square::None;
+  int halfmove_clock = 0;
+};
+
 class Board {
  public:
   Board();
@@ -45,6 +50,8 @@ class Board {
 
   void make_move(const Move& move, Undo& undo);
   void unmake_move(const Move& move, const Undo& undo);
+  void make_null_move(NullUndo& undo);
+  void unmake_null_move(const NullUndo& undo);
 
   std::string fen() const;
 

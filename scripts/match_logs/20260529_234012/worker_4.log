@@ -1,0 +1,22 @@
+=== Worker 4 start ===
+Running matches: games_per_side=5, depth=8, max_plies=150, movetime_ms=100, fen_or_book=book, version_a=v5, version_b=v16
+
+Batch 1/2: v5 white vs v16 black, 5 games
+Game (W:v5 vs B:v16) FEN=rnbqrbnk/1pp3pp/p4p2/3pp3/3P1P2/1PP5/P3P1PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v5 vs B:v16) FEN=knbrqbnr/1p2p2p/p1pp1pp1/8/8/1PP1PP1P/P2P2P1/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v5 vs B:v16) FEN=knbrqbnr/1p3ppp/p1p5/3pp3/2PP1P2/4P1P1/PP5P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v5 vs B:v16) FEN=rnbqrbnk/p1p3p1/1p2pp1p/3p4/4P3/PP1P2P1/2P2P1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v5 vs B:v16) FEN=knbrqbnr/ppp4p/5pp1/3pp3/8/PP1PPP2/2P3PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Batch 2/2: v16 white vs v5 black, 5 games
+Game (W:v16 vs B:v5) FEN=knbrqbnr/p5pp/1ppppp2/8/4P3/5PPP/PPPP4/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v16 vs B:v5) FEN=rnbqrbnk/p4ppp/1pp5/3pp3/3P4/2P2P1P/PP2P1P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v16 vs B:v5) FEN=rnbqrbnk/2pp2pp/pp3p2/4p3/2P1P3/P2P1P2/1P4PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v16 vs B:v5) FEN=knbrqbnr/pp3p2/3pp1pp/2p5/8/PP2PPP1/2PP3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v16 vs B:v5) FEN=rnbqrbnk/1p3p1p/p1p1p1p1/3p4/8/1PPPP1P1/P4P1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+
+=== Match Summary ===
+Total games: 10
+v5 wins: 1
+v16 wins: 5
+draws:   4
+=== Worker 4 end ===

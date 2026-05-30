@@ -23,7 +23,11 @@ int main(int argc, char** argv) {
   }
   if (argc > 3) {
     const int version = std::stoi(argv[3]);
-    if (version == 16) {
+    if (version == 18) {
+      cfg.version = engine::EngineVersion::V18_NullMove;
+    } else if (version == 17) {
+      cfg.version = engine::EngineVersion::V17_DeltaQsearch;
+    } else if (version == 16) {
       cfg.version = engine::EngineVersion::V16_SeeQsearch;
     } else if (version == 15) {
       cfg.version = engine::EngineVersion::V15_PiecePlacement;

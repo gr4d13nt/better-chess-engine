@@ -1,0 +1,18 @@
+=== Worker 7 start ===
+Running matches: games_per_side=50, depth=8, max_plies=150, movetime_ms=10, fen_or_book=book, version_a=v17, version_b=v18
+
+Batch 1/2: v17 white vs v18 black, 50 games
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/1p4pp/p1pppp2/8/3PP3/1P5P/P1P2PP1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v17 vs B:v18) FEN=knbrqbnr/ppp4p/4ppp1/3p4/2PP4/P3P1P1/1P3P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/p1pp1p2/1p4pp/4p3/8/1P1PPP1P/P1P3P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/1p1p2pp/p1p5/4pp2/8/P1PP1PP1/1P2P2P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v17 vs B:v18) FEN=knbrqbnr/1p4pp/p1pppp2/8/5P2/3PP1PP/PPP5/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v17 vs B:v18) FEN=knbrqbnr/ppp5/3p1ppp/4p3/8/PP1PPP2/2P3PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/1p3p1p/p3p1p1/2pp4/3P4/1PP3P1/P3PP1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v17 vs B:v18) FEN=knbrqbnr/pp3p2/2pp2pp/4p3/3PP3/6PP/PPP2P2/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v17 vs B:v18) FEN=knbrqbnr/2p1pp1p/pp4p1/3p4/5P2/3PP1PP/PPP5/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/pp4p1/2p1p2p/3p1p2/2PP4/P5P1/1P2PP1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v17 vs B:v18) FEN=knbrqbnr/1pp2p1p/p5p1/3pp3/4P3/P4PP1/1PPP3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v17 vs B:v18) FEN=knbrqbnr/p4pp1/1pppp2p/8/4PP2/1P4P1/P1PP3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/2pp2pp/pp6/4pp2/8/PP1P1PP1/2P1P2P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/pp4pp/3p1p2/2p1p3/5P2/2PPP1P1/PP5P/KNBRQBNR\ w\ -\ c6\ 0\ 1 -> result 1/2-1/2 threefold-repetition

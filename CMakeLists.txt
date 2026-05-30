@@ -25,6 +25,8 @@ add_library(engine STATIC
   src/search/search_v12_tt.cpp
   src/search/search_v14_tt.cpp
   src/search/search_v16_tt.cpp
+  src/search/search_v17_tt.cpp
+  src/search/search_v18_tt.cpp
   src/search/search_ordering.cpp
   src/search/search_eval_phase.cpp
   src/search/search_eval_layered.cpp
@@ -101,6 +103,14 @@ add_test(NAME see COMMAND see_tests)
 add_executable(see_qsearch_tests tests/see_qsearch_tests.cpp)
 target_link_libraries(see_qsearch_tests PRIVATE engine)
 add_test(NAME see_qsearch COMMAND see_qsearch_tests)
+
+add_executable(delta_qsearch_tests tests/delta_qsearch_tests.cpp)
+target_link_libraries(delta_qsearch_tests PRIVATE engine)
+add_test(NAME delta_qsearch COMMAND delta_qsearch_tests)
+
+add_executable(null_move_tests tests/null_move_tests.cpp)
+target_link_libraries(null_move_tests PRIVATE engine)
+add_test(NAME null_move COMMAND null_move_tests)
 
 add_executable(repetition_tests tests/repetition_tests.cpp)
 target_link_libraries(repetition_tests PRIVATE engine)

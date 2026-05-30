@@ -366,6 +366,30 @@ void Board::unmake_move(const Move& move, const Undo& undo) {
   refresh_zobrist();
 }
 
+void Board::make_null_move(NullUndo& undo) {
+  undo.ep_square = ep_square_;
+  undo.halfmove_clock = halfmove_clock_;
+
+  ep_square_ = Square::None;
+  halfmove_clock_++;
+
+  if (side_ == Color::Black) {
+    fullmove_number_++;
+  }
+  side_ = !side_;
+  refresh_zobrist();
+}
+
+void Board::unmake_null_move(const NullUndo& undo) {
+  if (side_ == Color::Black) {
+    fullmove_number_--;
+  }
+  side_ = !side_;
+  ep_square_ = undo.ep_square;
+  halfmove_clock_ = undo.halfmove_clock;
+  refresh_zobrist();
+}
+
 bool Board::is_checkmate() const {
   if (!in_check(side_)) {
     return false;

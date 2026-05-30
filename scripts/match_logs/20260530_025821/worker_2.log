@@ -1,0 +1,17 @@
+=== Worker 2 start ===
+Running matches: games_per_side=50, depth=8, max_plies=150, movetime_ms=10, fen_or_book=book, version_a=v17, version_b=v18
+
+Batch 1/2: v17 white vs v18 black, 50 games
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/p2p2p1/1pp1pp1p/8/8/1PPPP1P1/P4P1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/p1pp2p1/1p3p1p/4p3/8/PP1PPP2/2P3PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v17 vs B:v18) FEN=knbrqbnr/pp4p1/2ppp2p/5p2/2P1P3/P5P1/1P1P1P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/1p3p1p/p2pp1p1/2p5/2P2P2/1P1P3P/P3P1P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/1pp3pp/p7/3ppp2/3P4/1PP2P2/P3P1PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v17 vs B:v18) FEN=knbrqbnr/p1p3p1/1p1p1p1p/4p3/8/P1P1PPP1/1P1P3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/p5pp/1p1ppp2/2p5/2PP4/1P4P1/P3PP1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v17 vs B:v18) FEN=knbrqbnr/1p4pp/p2p4/2p1pp2/8/PPP1PP2/3P2PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v17 vs B:v18) FEN=knbrqbnr/pp3p1p/2p3p1/3pp3/4P3/P4PP1/1PPP3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v17 vs B:v18) FEN=knbrqbnr/p1p3pp/1p2p3/3p1p2/2PP4/1P2P1P1/P4P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/p1p3p1/1p1pp2p/5p2/2P5/PP1PP3/5PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v17 vs B:v18) FEN=rnbqrbnk/p1p4p/1p2p1p1/3p1p2/5P2/PPPP4/4P1PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v17 vs B:v18) FEN=knbrqbnr/ppp4p/4ppp1/3p4/4P3/1P1P1P2/P1P3PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies

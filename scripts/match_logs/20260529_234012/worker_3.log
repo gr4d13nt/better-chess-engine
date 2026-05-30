@@ -1,0 +1,22 @@
+=== Worker 3 start ===
+Running matches: games_per_side=5, depth=8, max_plies=150, movetime_ms=100, fen_or_book=book, version_a=v5, version_b=v16
+
+Batch 1/2: v5 white vs v16 black, 5 games
+Game (W:v5 vs B:v16) FEN=rnbqrbnk/3p2pp/pp2p3/2p2p2/2P2P2/P2P2P1/1P2P2P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v5 vs B:v16) FEN=rnbqrbnk/p1p3p1/1p1ppp1p/8/2PP4/PP6/4PPPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v5 vs B:v16) FEN=knbrqbnr/1pp4p/p2pp1p1/5p2/2P5/1P2PP1P/P2P2P1/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v5 vs B:v16) FEN=knbrqbnr/pp5p/2ppp1p1/5p2/2PP4/4P1PP/PP3P2/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v5 vs B:v16) FEN=knbrqbnr/pp3p2/2pp2pp/4p3/4P3/1P1P1P2/P1P3PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Batch 2/2: v16 white vs v5 black, 5 games
+Game (W:v16 vs B:v5) FEN=knbrqbnr/1p3ppp/p3p3/2pp4/3P1P2/1P2P2P/P1P3P1/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v16 vs B:v5) FEN=rnbqrbnk/pp4pp/3p1p2/2p1p3/5P2/2PPP2P/PP4P1/KNBRQBNR\ w\ -\ c6\ 0\ 1 -> result 1-0 checkmate
+Game (W:v16 vs B:v5) FEN=rnbqrbnk/pp3pp1/2pp3p/4p3/8/2PP1PPP/PP2P3/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v16 vs B:v5) FEN=knbrqbnr/pp4pp/2p5/3ppp2/2P1P3/1P4P1/P2P1P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v16 vs B:v5) FEN=rnbqrbnk/2p3pp/pp1ppp2/8/5P2/PP1P2P1/2P1P2P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+
+=== Match Summary ===
+Total games: 10
+v5 wins: 0
+v16 wins: 5
+draws:   5
+=== Worker 3 end ===
