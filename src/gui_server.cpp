@@ -21,6 +21,10 @@ namespace {
 
 std::optional<engine::EngineVersion> parse_version(int v) {
   switch (v) {
+    case 16:
+      return engine::EngineVersion::V16_SeeQsearch;
+    case 15:
+      return engine::EngineVersion::V15_PiecePlacement;
     case 14:
       return engine::EngineVersion::V14_RepetitionDraw;
     case 13:
@@ -213,7 +217,7 @@ int main(int argc, char** argv) {
   });
 
   server.Get("/api/health", [](const httplib::Request&, httplib::Response& res) {
-    res.set_content(R"({"ok":true,"max_version":14})", "application/json");
+    res.set_content(R"({"ok":true,"max_version":16})", "application/json");
   });
 
   std::cout << "Chess engine web UI\n";

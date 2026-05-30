@@ -23,7 +23,11 @@ int main(int argc, char** argv) {
   }
   if (argc > 3) {
     const int version = std::stoi(argv[3]);
-    if (version == 14) {
+    if (version == 16) {
+      cfg.version = engine::EngineVersion::V16_SeeQsearch;
+    } else if (version == 15) {
+      cfg.version = engine::EngineVersion::V15_PiecePlacement;
+    } else if (version == 14) {
       cfg.version = engine::EngineVersion::V14_RepetitionDraw;
     } else if (version == 13) {
       cfg.version = engine::EngineVersion::V13_MopUpEval;

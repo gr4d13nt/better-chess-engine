@@ -25,11 +25,15 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
                       cfg.version == EngineVersion::V11_TTHashMove ||
                       cfg.version == EngineVersion::V12_CheckExtension ||
                       cfg.version == EngineVersion::V13_MopUpEval ||
-                      cfg.version == EngineVersion::V14_RepetitionDraw;
+                      cfg.version == EngineVersion::V14_RepetitionDraw ||
+                      cfg.version == EngineVersion::V15_PiecePlacement ||
+                      cfg.version == EngineVersion::V16_SeeQsearch;
   const bool use_root_pv = cfg.version == EngineVersion::V11_TTHashMove ||
                            cfg.version == EngineVersion::V12_CheckExtension ||
                            cfg.version == EngineVersion::V13_MopUpEval ||
-                           cfg.version == EngineVersion::V14_RepetitionDraw;
+                           cfg.version == EngineVersion::V14_RepetitionDraw ||
+                           cfg.version == EngineVersion::V15_PiecePlacement ||
+                           cfg.version == EngineVersion::V16_SeeQsearch;
   if (use_tt) {
     tt_clear();
   }
@@ -47,7 +51,10 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
       bool ok = false;
       if (cfg.version == EngineVersion::V1_NoPruning) {
         ok = negamax_v1_no_pruning(board, depth - 1, st, child_score);
-      } else if (cfg.version == EngineVersion::V14_RepetitionDraw) {
+      } else if (cfg.version == EngineVersion::V16_SeeQsearch) {
+        ok = negamax_v16_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
+      } else if (cfg.version == EngineVersion::V14_RepetitionDraw ||
+                 cfg.version == EngineVersion::V15_PiecePlacement) {
         ok = negamax_v14_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
       } else if (cfg.version == EngineVersion::V13_MopUpEval ||
                  cfg.version == EngineVersion::V12_CheckExtension) {
@@ -85,8 +92,11 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
   };
 
   EngineVersion eval_profile = EngineVersion::V1_NoPruning;
-  if (cfg.version == EngineVersion::V14_RepetitionDraw ||
-      cfg.version == EngineVersion::V13_MopUpEval) {
+  if (cfg.version == EngineVersion::V16_SeeQsearch ||
+      cfg.version == EngineVersion::V15_PiecePlacement) {
+    eval_profile = EngineVersion::V15_PiecePlacement;
+  } else if (cfg.version == EngineVersion::V14_RepetitionDraw ||
+             cfg.version == EngineVersion::V13_MopUpEval) {
     eval_profile = EngineVersion::V13_MopUpEval;
   } else if (cfg.version == EngineVersion::V12_CheckExtension ||
       cfg.version == EngineVersion::V11_TTHashMove ||

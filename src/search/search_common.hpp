@@ -36,6 +36,7 @@ int evaluate_v7(const Board& board);
 int evaluate_v8(const Board& board);
 int evaluate_v9(const Board& board);
 int evaluate_v13(const Board& board);
+int evaluate_v15(const Board& board);
 // MG/EG components of evaluate_improved (material, PST, mobility, bishop pair).
 void evaluate_improved_split(const Board& board, int& mg_white, int& eg_white, int& mg_black,
                              int& eg_black);
@@ -56,6 +57,8 @@ bool negamax_v10_tt(Board& board, int depth, int alpha, int beta, SearchState& s
 bool negamax_v11_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 bool negamax_v12_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 bool negamax_v14_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v16_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 
 void prioritize_move(MoveList& moves, const Move& prefer);
 

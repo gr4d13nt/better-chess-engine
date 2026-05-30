@@ -241,7 +241,9 @@ void evaluate_improved_split(const Board& board, int& mg_white, int& eg_white, i
 
 int evaluate_for_side_to_move(const Board& board, EngineVersion eval_profile) {
   int white_eval = 0;
-  if (eval_profile == EngineVersion::V13_MopUpEval) {
+  if (eval_profile == EngineVersion::V15_PiecePlacement) {
+    white_eval = evaluate_v15(board);
+  } else if (eval_profile == EngineVersion::V13_MopUpEval) {
     white_eval = evaluate_v13(board);
   } else if (eval_profile == EngineVersion::V9_RookPlacement) {
     white_eval = evaluate_v9(board);

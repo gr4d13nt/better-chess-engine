@@ -35,6 +35,8 @@ set -euo pipefail
 #   v12 = v11 + one-ply check extension per line (max 1)
 #   v13 = v12 search + v7 eval + endgame mop-up (king approach / drive to edge)
 #   v14 = v13 search/eval + treat revisiting any prior position as a draw in search
+#   v15 = v14 search + v9 piece terms (knight/rook/bishop) + v13 mop-up eval
+#   v16 = v15 search/eval + SEE pruning for losing captures in qsearch (depth>=1 only)
 
 GAMES_PER_SIDE="${1:-2}"
 DEPTH="${2:-3}"

@@ -11,6 +11,7 @@ add_library(engine STATIC
   src/board.cpp
   src/movegen.cpp
   src/repetition.cpp
+  src/see.cpp
   src/zobrist.cpp
   src/search/search_common.cpp
   src/search/search_dispatch.cpp
@@ -23,6 +24,7 @@ add_library(engine STATIC
   src/search/search_v11_tt.cpp
   src/search/search_v12_tt.cpp
   src/search/search_v14_tt.cpp
+  src/search/search_v16_tt.cpp
   src/search/search_ordering.cpp
   src/search/search_eval_phase.cpp
   src/search/search_eval_layered.cpp
@@ -32,8 +34,10 @@ add_library(engine STATIC
   src/search/search_eval_v8.cpp
   src/search/search_eval_rook.cpp
   src/search/search_eval_v9.cpp
+  src/search/search_eval_bishop.cpp
   src/search/search_eval_mopup.cpp
   src/search/search_eval_v13.cpp
+  src/search/search_eval_v15.cpp
 )
 
 target_include_directories(engine PUBLIC
@@ -85,6 +89,18 @@ add_test(NAME eval_v9 COMMAND eval_v9_tests)
 add_executable(eval_v13_tests tests/eval_v13_tests.cpp)
 target_link_libraries(eval_v13_tests PRIVATE engine)
 add_test(NAME eval_v13 COMMAND eval_v13_tests)
+
+add_executable(eval_v15_tests tests/eval_v15_tests.cpp)
+target_link_libraries(eval_v15_tests PRIVATE engine)
+add_test(NAME eval_v15 COMMAND eval_v15_tests)
+
+add_executable(see_tests tests/see_tests.cpp)
+target_link_libraries(see_tests PRIVATE engine)
+add_test(NAME see COMMAND see_tests)
+
+add_executable(see_qsearch_tests tests/see_qsearch_tests.cpp)
+target_link_libraries(see_qsearch_tests PRIVATE engine)
+add_test(NAME see_qsearch COMMAND see_qsearch_tests)
 
 add_executable(repetition_tests tests/repetition_tests.cpp)
 target_link_libraries(repetition_tests PRIVATE engine)

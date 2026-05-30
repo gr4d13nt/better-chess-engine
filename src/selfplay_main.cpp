@@ -12,6 +12,12 @@
 namespace {
 
 engine::EngineVersion parse_version(int v) {
+  if (v == 16) {
+    return engine::EngineVersion::V16_SeeQsearch;
+  }
+  if (v == 15) {
+    return engine::EngineVersion::V15_PiecePlacement;
+  }
   if (v == 14) {
     return engine::EngineVersion::V14_RepetitionDraw;
   }
@@ -52,6 +58,12 @@ engine::EngineVersion parse_version(int v) {
 }
 
 const char* version_name(engine::EngineVersion v) {
+  if (v == engine::EngineVersion::V16_SeeQsearch) {
+    return "v16-see-qsearch";
+  }
+  if (v == engine::EngineVersion::V15_PiecePlacement) {
+    return "v15-piece-placement";
+  }
   if (v == engine::EngineVersion::V14_RepetitionDraw) {
     return "v14-repetition-draw";
   }

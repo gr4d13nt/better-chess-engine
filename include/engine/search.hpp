@@ -23,6 +23,8 @@ enum class EngineVersion : int {
   V12_CheckExtension = 12,
   V13_MopUpEval = 13,
   V14_RepetitionDraw = 14,
+  V15_PiecePlacement = 15,
+  V16_SeeQsearch = 16,
 };
 
 struct SearchConfig {
