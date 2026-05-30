@@ -4,12 +4,17 @@
 #include "engine/movegen.hpp"
 #include "engine/search.hpp"
 
+#include <cstdint>
 #include <iostream>
 #include <string>
+#include <vector>
 
 namespace {
 
 engine::EngineVersion parse_version(int v) {
+  if (v == 14) {
+    return engine::EngineVersion::V14_RepetitionDraw;
+  }
   if (v == 13) {
     return engine::EngineVersion::V13_MopUpEval;
   }
@@ -47,6 +52,9 @@ engine::EngineVersion parse_version(int v) {
 }
 
 const char* version_name(engine::EngineVersion v) {
+  if (v == engine::EngineVersion::V14_RepetitionDraw) {
+    return "v14-repetition-draw";
+  }
   if (v == engine::EngineVersion::V13_MopUpEval) {
     return "v13-mop-up-eval";
   }
@@ -81,6 +89,16 @@ const char* version_name(engine::EngineVersion v) {
     return "v3-improved-eval";
   }
   return v == engine::EngineVersion::V2_AlphaBeta ? "v2-alpha-beta" : "v1-no-pruning";
+}
+
+int count_hash(const std::vector<std::uint64_t>& hashes, std::uint64_t key) {
+  int count = 0;
+  for (std::uint64_t h : hashes) {
+    if (h == key) {
+      ++count;
+    }
+  }
+  return count;
 }
 
 }  // namespace
@@ -133,6 +151,9 @@ int main(int argc, char** argv) {
             << " depth=" << depth << " max_plies=" << max_plies
             << " movetime_ms=" << movetime_ms << '\n';
 
+  std::vector<std::uint64_t> repetition_hashes;
+  repetition_hashes.push_back(board.zobrist());
+
   int plies = 0;
   while (plies < max_plies) {
     engine::MoveList legal;
@@ -153,6 +174,8 @@ int main(int argc, char** argv) {
     cfg.version = (board.side_to_move() == engine::Color::White) ? white : black;
     cfg.movetime_ms = movetime_ms;
 
+    cfg.repetition_history = repetition_hashes;
+
     engine::SearchResult result = engine::search_best_move(board, cfg);
     if (!result.has_move) {
       std::cout << "result 1/2-1/2 nomove\n";
@@ -166,6 +189,11 @@ int main(int argc, char** argv) {
 
     engine::Undo undo;
     board.make_move(result.best_move, undo);
+    repetition_hashes.push_back(board.zobrist());
+    if (count_hash(repetition_hashes, board.zobrist()) >= 3) {
+      std::cout << "result 1/2-1/2 threefold-repetition\n";
+      return 0;
+    }
     plies++;
   }
 

@@ -1,4 +1,5 @@
 const VERSIONS = [
+  { id: 14, label: "v14 repetition draw" },
   { id: 13, label: "v13 mop-up eval" },
   { id: 12, label: "v12 check extension" },
   { id: 11, label: "v11 TT hash move" },
@@ -171,6 +172,7 @@ function canInteract() {
 function searchConfig(side) {
   return {
     fen: game.fen(),
+    repetition_fens: fenHistory.slice(0, viewIndex + 1),
     depth: Number(depthEl.value),
     movetime_ms: Number(movetimeEl.value),
     version: Number(side === "w" ? whiteVersionEl.value : blackVersionEl.value),
@@ -570,7 +572,7 @@ function onKeyDown(event) {
   }
 }
 
-fillVersionSelect(whiteVersionEl, 13);
+fillVersionSelect(whiteVersionEl, 14);
 fillVersionSelect(blackVersionEl, 12);
 
 document.getElementById("new-game").addEventListener("click", resetGame);

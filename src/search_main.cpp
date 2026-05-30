@@ -23,7 +23,9 @@ int main(int argc, char** argv) {
   }
   if (argc > 3) {
     const int version = std::stoi(argv[3]);
-    if (version == 13) {
+    if (version == 14) {
+      cfg.version = engine::EngineVersion::V14_RepetitionDraw;
+    } else if (version == 13) {
       cfg.version = engine::EngineVersion::V13_MopUpEval;
     } else if (version == 12) {
       cfg.version = engine::EngineVersion::V12_CheckExtension;

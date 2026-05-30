@@ -34,6 +34,7 @@ set -euo pipefail
 #   v11 = v10 + TT hash-move ordering + iterative-deepening PV move at root
 #   v12 = v11 + one-ply check extension per line (max 1)
 #   v13 = v12 search + v7 eval + endgame mop-up (king approach / drive to edge)
+#   v14 = v13 search/eval + treat revisiting any prior position as a draw in search
 
 GAMES_PER_SIDE="${1:-2}"
 DEPTH="${2:-3}"

@@ -3,6 +3,9 @@
 #include "engine/board.hpp"
 #include "engine/move.hpp"
 
+#include <cstdint>
+#include <vector>
+
 namespace engine {
 
 enum class EngineVersion : int {
@@ -19,6 +22,7 @@ enum class EngineVersion : int {
   V11_TTHashMove = 11,
   V12_CheckExtension = 12,
   V13_MopUpEval = 13,
+  V14_RepetitionDraw = 14,
 };
 
 struct SearchConfig {
@@ -26,6 +30,8 @@ struct SearchConfig {
   EngineVersion version = EngineVersion::V1_NoPruning;
   // Per-move search budget in milliseconds. 0 means depth-only.
   int movetime_ms = 0;
+  // Game position hashes from the start through the current root (for v14 repetition).
+  std::vector<std::uint64_t> repetition_history{};
 };
 
 struct SearchResult {

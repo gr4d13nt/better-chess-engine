@@ -24,10 +24,12 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
   const bool use_tt = cfg.version == EngineVersion::V10_TranspositionTable ||
                       cfg.version == EngineVersion::V11_TTHashMove ||
                       cfg.version == EngineVersion::V12_CheckExtension ||
-                      cfg.version == EngineVersion::V13_MopUpEval;
+                      cfg.version == EngineVersion::V13_MopUpEval ||
+                      cfg.version == EngineVersion::V14_RepetitionDraw;
   const bool use_root_pv = cfg.version == EngineVersion::V11_TTHashMove ||
                            cfg.version == EngineVersion::V12_CheckExtension ||
-                           cfg.version == EngineVersion::V13_MopUpEval;
+                           cfg.version == EngineVersion::V13_MopUpEval ||
+                           cfg.version == EngineVersion::V14_RepetitionDraw;
   if (use_tt) {
     tt_clear();
   }
@@ -45,6 +47,8 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
       bool ok = false;
       if (cfg.version == EngineVersion::V1_NoPruning) {
         ok = negamax_v1_no_pruning(board, depth - 1, st, child_score);
+      } else if (cfg.version == EngineVersion::V14_RepetitionDraw) {
+        ok = negamax_v14_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
       } else if (cfg.version == EngineVersion::V13_MopUpEval ||
                  cfg.version == EngineVersion::V12_CheckExtension) {
         ok = negamax_v12_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
@@ -81,7 +85,8 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
   };
 
   EngineVersion eval_profile = EngineVersion::V1_NoPruning;
-  if (cfg.version == EngineVersion::V13_MopUpEval) {
+  if (cfg.version == EngineVersion::V14_RepetitionDraw ||
+      cfg.version == EngineVersion::V13_MopUpEval) {
     eval_profile = EngineVersion::V13_MopUpEval;
   } else if (cfg.version == EngineVersion::V12_CheckExtension ||
       cfg.version == EngineVersion::V11_TTHashMove ||
@@ -101,6 +106,14 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
     eval_profile = EngineVersion::V3_ImprovedEval;
   }
 
+  auto init_search_state = [&](SearchState& st) {
+    st.eval_profile = eval_profile;
+    if (use_tt) {
+      st.tt = &global_tt();
+    }
+    st.repetition = cfg.repetition_history;
+  };
+
   auto ensure_fallback = [&](SearchResult& result, const SearchState& st) {
     result.nodes = st.nodes;
     if (!result.has_move) {
@@ -112,10 +125,7 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
 
   if (cfg.movetime_ms <= 0) {
     SearchState st{};
-    st.eval_profile = eval_profile;
-    if (use_tt) {
-      st.tt = &global_tt();
-    }
+    init_search_state(st);
     SearchResult result{};
     const int depth = std::max(1, cfg.depth);
     const bool ok = run_depth(depth, -kMateScore, kMateScore, st, result);
@@ -128,10 +138,7 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
 
   SearchState st{};
   st.use_time = true;
-  st.eval_profile = eval_profile;
-  if (use_tt) {
-    st.tt = &global_tt();
-  }
+  init_search_state(st);
   st.deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(cfg.movetime_ms);
 
   SearchResult best_complete{};

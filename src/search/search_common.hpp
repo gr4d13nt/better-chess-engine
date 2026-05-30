@@ -7,6 +7,8 @@
 #include "search_tt.hpp"
 
 #include <chrono>
+#include <cstdint>
+#include <vector>
 
 namespace engine::search_common {
 
@@ -21,6 +23,8 @@ struct SearchState {
   bool stopped = false;
   EngineVersion eval_profile = EngineVersion::V1_NoPruning;
   TranspositionTable* tt = nullptr;
+  // Game history + positions on the current search path (v14 repetition).
+  std::vector<std::uint64_t> repetition{};
 };
 
 bool should_stop(SearchState& st);
@@ -51,6 +55,7 @@ bool negamax_v5_move_ordering(Board& board, int depth, int alpha, int beta, Sear
 bool negamax_v10_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 bool negamax_v11_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 bool negamax_v12_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+bool negamax_v14_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 
 void prioritize_move(MoveList& moves, const Move& prefer);
 

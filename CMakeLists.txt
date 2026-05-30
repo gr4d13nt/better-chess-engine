@@ -10,6 +10,7 @@ add_library(engine STATIC
   src/attacks.cpp
   src/board.cpp
   src/movegen.cpp
+  src/repetition.cpp
   src/zobrist.cpp
   src/search/search_common.cpp
   src/search/search_dispatch.cpp
@@ -21,6 +22,7 @@ add_library(engine STATIC
   src/search/search_v10_tt.cpp
   src/search/search_v11_tt.cpp
   src/search/search_v12_tt.cpp
+  src/search/search_v14_tt.cpp
   src/search/search_ordering.cpp
   src/search/search_eval_phase.cpp
   src/search/search_eval_layered.cpp
@@ -83,6 +85,10 @@ add_test(NAME eval_v9 COMMAND eval_v9_tests)
 add_executable(eval_v13_tests tests/eval_v13_tests.cpp)
 target_link_libraries(eval_v13_tests PRIVATE engine)
 add_test(NAME eval_v13 COMMAND eval_v13_tests)
+
+add_executable(repetition_tests tests/repetition_tests.cpp)
+target_link_libraries(repetition_tests PRIVATE engine)
+add_test(NAME repetition COMMAND repetition_tests)
 
 add_executable(tt_tests tests/tt_tests.cpp)
 target_link_libraries(tt_tests PRIVATE engine)
