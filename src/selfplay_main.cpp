@@ -12,6 +12,18 @@
 namespace {
 
 engine::EngineVersion parse_version(int v) {
+  if (v == 22) {
+    return engine::EngineVersion::V22_ExtendedPawnStructure;
+  }
+  if (v == 21) {
+    return engine::EngineVersion::V21_PassedPawns;
+  }
+  if (v == 20) {
+    return engine::EngineVersion::V20_PersistentTT;
+  }
+  if (v == 19) {
+    return engine::EngineVersion::V19_KillerHistory;
+  }
   if (v == 18) {
     return engine::EngineVersion::V18_NullMove;
   }
@@ -64,6 +76,18 @@ engine::EngineVersion parse_version(int v) {
 }
 
 const char* version_name(engine::EngineVersion v) {
+  if (v == engine::EngineVersion::V22_ExtendedPawnStructure) {
+    return "v22-extended-pawn";
+  }
+  if (v == engine::EngineVersion::V21_PassedPawns) {
+    return "v21-passed-pawns";
+  }
+  if (v == engine::EngineVersion::V20_PersistentTT) {
+    return "v20-persistent-tt";
+  }
+  if (v == engine::EngineVersion::V19_KillerHistory) {
+    return "v19-killer-history";
+  }
   if (v == engine::EngineVersion::V18_NullMove) {
     return "v18-null-move";
   }

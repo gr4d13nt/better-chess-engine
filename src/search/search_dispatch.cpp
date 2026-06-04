@@ -3,7 +3,11 @@
 #include "search_common.hpp"
 #include "search_tt.hpp"
 
+#include <algorithm>
+
 namespace engine {
+
+void clear_transposition_table() { search_common::tt_clear(); }
 
 int evaluate(const Board& board) {
   return search_common::evaluate_improved(board);
@@ -29,7 +33,11 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
                       cfg.version == EngineVersion::V15_PiecePlacement ||
                       cfg.version == EngineVersion::V16_SeeQsearch ||
                       cfg.version == EngineVersion::V17_DeltaQsearch ||
-                      cfg.version == EngineVersion::V18_NullMove;
+                      cfg.version == EngineVersion::V18_NullMove ||
+                      cfg.version == EngineVersion::V19_KillerHistory ||
+                      cfg.version == EngineVersion::V20_PersistentTT ||
+                      cfg.version == EngineVersion::V21_PassedPawns ||
+                      cfg.version == EngineVersion::V22_ExtendedPawnStructure;
   const bool use_root_pv = cfg.version == EngineVersion::V11_TTHashMove ||
                            cfg.version == EngineVersion::V12_CheckExtension ||
                            cfg.version == EngineVersion::V13_MopUpEval ||
@@ -37,9 +45,18 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
                            cfg.version == EngineVersion::V15_PiecePlacement ||
                            cfg.version == EngineVersion::V16_SeeQsearch ||
                            cfg.version == EngineVersion::V17_DeltaQsearch ||
-                           cfg.version == EngineVersion::V18_NullMove;
+                           cfg.version == EngineVersion::V18_NullMove ||
+                           cfg.version == EngineVersion::V19_KillerHistory ||
+                           cfg.version == EngineVersion::V20_PersistentTT ||
+                           cfg.version == EngineVersion::V21_PassedPawns ||
+                           cfg.version == EngineVersion::V22_ExtendedPawnStructure;
+  const bool persistent_tt = cfg.version == EngineVersion::V20_PersistentTT ||
+                             cfg.version == EngineVersion::V21_PassedPawns ||
+                             cfg.version == EngineVersion::V22_ExtendedPawnStructure;
   if (use_tt) {
-    tt_clear();
+    if (!persistent_tt || cfg.clear_transposition_table) {
+      tt_clear();
+    }
   }
 
   auto run_depth = [&](int depth, int root_alpha, int root_beta, SearchState& st,
@@ -55,6 +72,14 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
       bool ok = false;
       if (cfg.version == EngineVersion::V1_NoPruning) {
         ok = negamax_v1_no_pruning(board, depth - 1, st, child_score);
+      } else if (cfg.version == EngineVersion::V22_ExtendedPawnStructure) {
+        ok = negamax_v22_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
+      } else if (cfg.version == EngineVersion::V21_PassedPawns) {
+        ok = negamax_v21_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
+      } else if (cfg.version == EngineVersion::V20_PersistentTT) {
+        ok = negamax_v20_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
+      } else if (cfg.version == EngineVersion::V19_KillerHistory) {
+        ok = negamax_v19_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
       } else if (cfg.version == EngineVersion::V18_NullMove) {
         ok = negamax_v18_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
       } else if (cfg.version == EngineVersion::V17_DeltaQsearch) {
@@ -100,11 +125,21 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
   };
 
   EngineVersion eval_profile = EngineVersion::V1_NoPruning;
-  if (cfg.version == EngineVersion::V18_NullMove ||
+  if (cfg.version == EngineVersion::V22_ExtendedPawnStructure ||
+      cfg.version == EngineVersion::V21_PassedPawns ||
+      cfg.version == EngineVersion::V20_PersistentTT ||
+      cfg.version == EngineVersion::V19_KillerHistory ||
+      cfg.version == EngineVersion::V18_NullMove ||
       cfg.version == EngineVersion::V17_DeltaQsearch ||
       cfg.version == EngineVersion::V16_SeeQsearch ||
       cfg.version == EngineVersion::V15_PiecePlacement) {
-    eval_profile = EngineVersion::V15_PiecePlacement;
+    if (cfg.version == EngineVersion::V22_ExtendedPawnStructure) {
+      eval_profile = EngineVersion::V22_ExtendedPawnStructure;
+    } else if (cfg.version == EngineVersion::V21_PassedPawns) {
+      eval_profile = EngineVersion::V21_PassedPawns;
+    } else {
+      eval_profile = EngineVersion::V15_PiecePlacement;
+    }
   } else if (cfg.version == EngineVersion::V14_RepetitionDraw ||
              cfg.version == EngineVersion::V13_MopUpEval) {
     eval_profile = EngineVersion::V13_MopUpEval;
@@ -130,6 +165,7 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
     st.eval_profile = eval_profile;
     if (use_tt) {
       st.tt = &global_tt();
+      st.tt_generation = st.tt->new_search();
     }
     st.repetition = cfg.repetition_history;
   };

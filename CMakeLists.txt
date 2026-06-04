@@ -27,6 +27,10 @@ add_library(engine STATIC
   src/search/search_v16_tt.cpp
   src/search/search_v17_tt.cpp
   src/search/search_v18_tt.cpp
+  src/search/search_v19_tt.cpp
+  src/search/search_v20_tt.cpp
+  src/search/search_v21_tt.cpp
+  src/search/search_v22_tt.cpp
   src/search/search_ordering.cpp
   src/search/search_eval_phase.cpp
   src/search/search_eval_layered.cpp
@@ -40,6 +44,9 @@ add_library(engine STATIC
   src/search/search_eval_mopup.cpp
   src/search/search_eval_v13.cpp
   src/search/search_eval_v15.cpp
+  src/search/search_eval_v21.cpp
+  src/search/search_eval_pawn_extended.cpp
+  src/search/search_eval_v22.cpp
 )
 
 target_include_directories(engine PUBLIC
@@ -96,6 +103,14 @@ add_executable(eval_v15_tests tests/eval_v15_tests.cpp)
 target_link_libraries(eval_v15_tests PRIVATE engine)
 add_test(NAME eval_v15 COMMAND eval_v15_tests)
 
+add_executable(eval_v21_tests tests/eval_v21_tests.cpp)
+target_link_libraries(eval_v21_tests PRIVATE engine)
+add_test(NAME eval_v21 COMMAND eval_v21_tests)
+
+add_executable(eval_v22_tests tests/eval_v22_tests.cpp)
+target_link_libraries(eval_v22_tests PRIVATE engine)
+add_test(NAME eval_v22 COMMAND eval_v22_tests)
+
 add_executable(see_tests tests/see_tests.cpp)
 target_link_libraries(see_tests PRIVATE engine)
 add_test(NAME see COMMAND see_tests)
@@ -111,6 +126,14 @@ add_test(NAME delta_qsearch COMMAND delta_qsearch_tests)
 add_executable(null_move_tests tests/null_move_tests.cpp)
 target_link_libraries(null_move_tests PRIVATE engine)
 add_test(NAME null_move COMMAND null_move_tests)
+
+add_executable(killer_history_tests tests/killer_history_tests.cpp)
+target_link_libraries(killer_history_tests PRIVATE engine)
+add_test(NAME killer_history COMMAND killer_history_tests)
+
+add_executable(persistent_tt_tests tests/persistent_tt_tests.cpp)
+target_link_libraries(persistent_tt_tests PRIVATE engine)
+add_test(NAME persistent_tt COMMAND persistent_tt_tests)
 
 add_executable(repetition_tests tests/repetition_tests.cpp)
 target_link_libraries(repetition_tests PRIVATE engine)

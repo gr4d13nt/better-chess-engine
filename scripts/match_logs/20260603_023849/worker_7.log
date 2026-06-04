@@ -1,0 +1,2 @@
+=== Worker 7 start ===
+ERROR: games_per_side must be a positive integer (got 'q').

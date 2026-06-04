@@ -184,7 +184,7 @@ bool negamax_v16_tt_impl(Board& board, int depth, int alpha, int beta, SearchSta
 
   int tt_score = 0;
   if (depth > 0 && st.tt != nullptr &&
-      st.tt->probe(key, depth, alpha, beta, tt_score)) {
+      st.tt->probe(key, depth, alpha, beta, st.tt_generation, tt_score)) {
     out_score = tt_score;
     return true;
   }
@@ -267,7 +267,7 @@ bool negamax_v16_tt_impl(Board& board, int depth, int alpha, int beta, SearchSta
       move_to_store = best_move;
       store_move = true;
     }
-    st.tt->store(key, depth, best, bound, move_to_store, store_move);
+    st.tt->store(key, depth, best, bound, st.tt_generation, move_to_store, store_move);
   }
 
   out_score = best;

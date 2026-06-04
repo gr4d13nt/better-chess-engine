@@ -72,6 +72,15 @@ body {
   box-shadow: inset 0 0 0 4px rgba(255, 220, 90, 0.85);
 }
 
+#board .highlight-sf-from {
+  box-shadow: inset 0 0 0 4px rgba(79, 180, 255, 0.95);
+}
+
+#board .highlight-sf-to {
+  background: radial-gradient(circle, rgba(79, 140, 255, 0.7) 20%, rgba(0, 0, 0, 0) 21%) !important;
+  box-shadow: inset 0 0 0 3px rgba(79, 180, 255, 0.85);
+}
+
 .game-over {
   position: absolute;
   inset: 0;
@@ -136,6 +145,48 @@ body {
   max-width: 520px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.material-panel {
+  margin-top: 10px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #151a20;
+  padding: 8px 10px;
+}
+
+.material-row {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+}
+
+.material-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.material-pieces {
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.material-adv {
+  font-size: 0.84rem;
+  font-weight: 700;
+  min-width: 28px;
+  text-align: right;
+}
+
+.material-adv.positive {
+  color: #7ddea8;
 }
 
 .eval-header {

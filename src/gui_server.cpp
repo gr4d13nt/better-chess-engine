@@ -21,6 +21,14 @@ namespace {
 
 std::optional<engine::EngineVersion> parse_version(int v) {
   switch (v) {
+    case 22:
+      return engine::EngineVersion::V22_ExtendedPawnStructure;
+    case 21:
+      return engine::EngineVersion::V21_PassedPawns;
+    case 20:
+      return engine::EngineVersion::V20_PersistentTT;
+    case 19:
+      return engine::EngineVersion::V19_KillerHistory;
     case 18:
       return engine::EngineVersion::V18_NullMove;
     case 17:
@@ -80,6 +88,25 @@ int json_int_token(const std::string& body, const std::string& key, int fallback
     return fallback;
   }
   return std::stoi(body.substr(pos, end - pos));
+}
+
+bool json_bool_token(const std::string& body, const std::string& key, bool fallback) {
+  const std::string needle = "\"" + key + "\":";
+  const std::size_t start = body.find(needle);
+  if (start == std::string::npos) {
+    return fallback;
+  }
+  std::size_t pos = start + needle.size();
+  while (pos < body.size() && (body[pos] == ' ' || body[pos] == '\t')) {
+    ++pos;
+  }
+  if (body.compare(pos, 4, "true") == 0) {
+    return true;
+  }
+  if (body.compare(pos, 5, "false") == 0) {
+    return false;
+  }
+  return fallback;
 }
 
 std::optional<std::string> json_string(const std::string& body, const std::string& key) {
@@ -179,6 +206,7 @@ std::string handle_search(const std::string& body) {
   cfg.movetime_ms = json_int_token(body, "movetime_ms", 0);
   cfg.version = *version;
   cfg.repetition_history = engine::repetition_hashes_from_fens(json_string_array(body, "repetition_fens"));
+  cfg.clear_transposition_table = json_bool_token(body, "clear_tt", false);
 
   const engine::SearchResult result = engine::search_best_move(board, cfg);
   if (!result.has_move) {
@@ -221,7 +249,7 @@ int main(int argc, char** argv) {
   });
 
   server.Get("/api/health", [](const httplib::Request&, httplib::Response& res) {
-    res.set_content(R"({"ok":true,"max_version":16})", "application/json");
+    res.set_content(R"({"ok":true,"max_version":21})", "application/json");
   });
 
   std::cout << "Chess engine web UI\n";

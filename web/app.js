@@ -1,4 +1,8 @@
 const VERSIONS = [
+  { id: 22, label: "v22 extended pawn" },
+  { id: 21, label: "v21 passed pawns" },
+  { id: 20, label: "v20 persistent TT" },
+  { id: 19, label: "v19 killer/history" },
   { id: 18, label: "v18 null move" },
   { id: 17, label: "v17 delta qsearch" },
   { id: 16, label: "v16 SEE qsearch" },
@@ -26,6 +30,8 @@ let selectedSquare = null;
 let fenHistory = [];
 let moveMeta = [];
 let viewIndex = 0;
+let clearTtOnNextSearch = false;
+let stockfishBestMove = null;
 
 const modeEl = document.getElementById("mode");
 const whiteVersionEl = document.getElementById("white-version");
@@ -41,6 +47,16 @@ const gameOverSubtitleEl = document.getElementById("game-over-subtitle");
 const startFenEl = document.getElementById("start-fen");
 const sfEvalTextEl = document.getElementById("sf-eval-text");
 const sfEvalBarEl = document.getElementById("sf-eval-bar");
+const whiteCapturedEl = document.getElementById("white-captured");
+const blackCapturedEl = document.getElementById("black-captured");
+const whiteAdvEl = document.getElementById("white-adv");
+const blackAdvEl = document.getElementById("black-adv");
+
+const MATERIAL_BASE_COUNTS = { p: 8, n: 2, b: 2, r: 2, q: 1 };
+const MATERIAL_VALUES = { p: 1, n: 3, b: 3, r: 5, q: 9 };
+const PIECE_ORDER = ["q", "r", "b", "n", "p"];
+const BLACK_GLYPHS = { p: "♟", n: "♞", b: "♝", r: "♜", q: "♛" };
+const WHITE_GLYPHS = { p: "♙", n: "♘", b: "♗", r: "♖", q: "♕" };
 
 function fillVersionSelect(select, defaultVersion) {
   select.innerHTML = "";
@@ -141,7 +157,15 @@ function updateStockfishDisplay(result) {
   }
   sfEvalTextEl.textContent = result.text;
   sfEvalTextEl.classList.toggle("thinking", Boolean(result.thinking));
-  sfEvalBarEl.style.width = `${result.barWidth}%`;
+  if (result.barWidth != null) {
+    sfEvalBarEl.style.width = `${result.barWidth}%`;
+  }
+  if (result.thinking) {
+    stockfishBestMove = null;
+  } else {
+    stockfishBestMove = result.bestMove || null;
+  }
+  applyBoardHighlights();
 }
 
 function refreshStockfishEval() {
@@ -151,14 +175,90 @@ function refreshStockfishEval() {
   requestStockfishEval(fenHistory[viewIndex] || game.fen());
 }
 
+function materialCounts() {
+  const counts = {
+    w: { p: 0, n: 0, b: 0, r: 0, q: 0 },
+    b: { p: 0, n: 0, b: 0, r: 0, q: 0 },
+  };
+  const rows = game.board();
+  for (const row of rows) {
+    for (const piece of row) {
+      if (!piece || piece.type === "k") continue;
+      counts[piece.color][piece.type]++;
+    }
+  }
+  return counts;
+}
+
+function capturedPiecesFor(capturedColor, counts) {
+  const out = { p: 0, n: 0, b: 0, r: 0, q: 0 };
+  for (const type of PIECE_ORDER) {
+    out[type] = Math.max(0, MATERIAL_BASE_COUNTS[type] - counts[capturedColor][type]);
+  }
+  return out;
+}
+
+function materialFromCaptured(captured) {
+  let total = 0;
+  for (const type of PIECE_ORDER) {
+    total += captured[type] * MATERIAL_VALUES[type];
+  }
+  return total;
+}
+
+function capturedString(captured, glyphs) {
+  let text = "";
+  for (const type of PIECE_ORDER) {
+    text += glyphs[type].repeat(captured[type]);
+  }
+  return text;
+}
+
+function updateMaterialBalance() {
+  if (!whiteCapturedEl || !blackCapturedEl || !whiteAdvEl || !blackAdvEl) {
+    return;
+  }
+  const counts = materialCounts();
+  const capturedByWhite = capturedPiecesFor("b", counts);
+  const capturedByBlack = capturedPiecesFor("w", counts);
+  const whiteMaterialGain = materialFromCaptured(capturedByWhite);
+  const blackMaterialGain = materialFromCaptured(capturedByBlack);
+  const diff = whiteMaterialGain - blackMaterialGain;
+
+  whiteCapturedEl.textContent = capturedString(capturedByWhite, BLACK_GLYPHS);
+  blackCapturedEl.textContent = capturedString(capturedByBlack, WHITE_GLYPHS);
+
+  whiteAdvEl.textContent = diff > 0 ? `+${diff}` : "";
+  blackAdvEl.textContent = diff < 0 ? `+${-diff}` : "";
+  whiteAdvEl.classList.toggle("positive", diff > 0);
+  blackAdvEl.classList.toggle("positive", diff < 0);
+}
+
 function squareClass(square) {
   return `square-${square.charAt(0)}${square.charAt(1)}`;
 }
 
 function clearHighlights() {
   $("#board [class*='square-']").removeClass(
-    "highlight-selected highlight-legal highlight-capture highlight-last-from highlight-last-to"
+    "highlight-selected highlight-legal highlight-capture highlight-last-from highlight-last-to highlight-sf-from highlight-sf-to"
   );
+}
+
+function applyBoardHighlights() {
+  clearHighlights();
+
+  if (viewIndex > 0) {
+    const last = moveMeta[viewIndex - 1];
+    if (last) {
+      highlightSquare(last.from, "highlight-last-from");
+      highlightSquare(last.to, "highlight-last-to");
+    }
+  }
+
+  if (stockfishBestMove) {
+    highlightSquare(stockfishBestMove.from, "highlight-sf-from");
+    highlightSquare(stockfishBestMove.to, "highlight-sf-to");
+  }
 }
 
 function highlightSquare(square, className) {
@@ -174,13 +274,18 @@ function canInteract() {
 }
 
 function searchConfig(side) {
-  return {
+  const config = {
     fen: game.fen(),
     repetition_fens: fenHistory.slice(0, viewIndex + 1),
     depth: Number(depthEl.value),
     movetime_ms: Number(movetimeEl.value),
     version: Number(side === "w" ? whiteVersionEl.value : blackVersionEl.value),
   };
+  if (clearTtOnNextSearch) {
+    config.clear_tt = true;
+    clearTtOnNextSearch = false;
+  }
+  return config;
 }
 
 async function requestEngineMove(side) {
@@ -220,16 +325,7 @@ function isEngineTurn() {
 }
 
 function applyLastMoveHighlight() {
-  clearHighlights();
-  if (viewIndex === 0) {
-    return;
-  }
-  const last = moveMeta[viewIndex - 1];
-  if (!last) {
-    return;
-  }
-  highlightSquare(last.from, "highlight-last-from");
-  highlightSquare(last.to, "highlight-last-to");
+  applyBoardHighlights();
 }
 
 function showLegalMoves(square) {
@@ -240,6 +336,10 @@ function showLegalMoves(square) {
     const targetPiece = game.get(move.to);
     const isCapture = Boolean(targetPiece) || move.flags.includes("e") || move.flags.includes("c");
     highlightSquare(move.to, isCapture ? "highlight-capture" : "highlight-legal");
+  }
+  if (stockfishBestMove) {
+    highlightSquare(stockfishBestMove.from, "highlight-sf-from");
+    highlightSquare(stockfishBestMove.to, "highlight-sf-to");
   }
 }
 
@@ -259,6 +359,7 @@ function updateViewStatus(extra = "") {
 function syncBoard() {
   board.position(fenHistory[viewIndex], false);
   applyLastMoveHighlight();
+  updateMaterialBalance();
   updateGameOverBanner();
   refreshStockfishEval();
   if (!canInteract() || !isHumanTurn()) {
@@ -271,6 +372,7 @@ function initHistory() {
   moveMeta = [];
   viewIndex = 0;
   selectedSquare = null;
+  stockfishBestMove = null;
   clearHighlights();
 }
 
@@ -502,6 +604,7 @@ function startAutoPlay() {
 }
 
 function beginGameFromCurrentPosition(statusText) {
+  clearTtOnNextSearch = true;
   initHistory();
   hideGameOver();
   syncBoard();
@@ -523,9 +626,8 @@ function loadPositionFromFen() {
     return;
   }
 
-  try {
-    game.load(fen);
-  } catch {
+  const loaded = game.load(fen);
+  if (!loaded) {
     setStatus("Invalid FEN — check the string and try again.");
     return;
   }
@@ -576,8 +678,15 @@ function onKeyDown(event) {
   }
 }
 
-fillVersionSelect(whiteVersionEl, 18);
+fillVersionSelect(whiteVersionEl, 21);
 fillVersionSelect(blackVersionEl, 12);
+
+whiteVersionEl.addEventListener("change", () => {
+  clearTtOnNextSearch = true;
+});
+blackVersionEl.addEventListener("change", () => {
+  clearTtOnNextSearch = true;
+});
 
 document.getElementById("new-game").addEventListener("click", resetGame);
 document.getElementById("load-fen").addEventListener("click", loadPositionFromFen);
@@ -616,9 +725,31 @@ for (const button of promotionModal.querySelectorAll("[data-piece]")) {
   button.addEventListener("click", () => completePromotion(button.dataset.piece));
 }
 
+async function checkServerVersion() {
+  try {
+    const response = await fetch("/api/health");
+    const data = await response.json();
+    const maxVersion = Number(data.max_version);
+    if (!Number.isFinite(maxVersion)) {
+      setStatus("Server is outdated — restart with ./scripts/run_gui.sh");
+      return;
+    }
+    const uiMax = VERSIONS[0].id;
+    if (maxVersion < uiMax) {
+      setStatus(`Server supports up to v${maxVersion}; restart ./scripts/run_gui.sh for v${uiMax}`);
+    }
+  } catch {
+    setStatus("Cannot reach engine server — run ./scripts/run_gui.sh");
+  }
+}
+
 initBoard();
 initHistory();
 initStockfishEval({ onEval: updateStockfishDisplay });
 syncBoard();
 updateControlsForMode();
-setStatus("Ready. Click a piece for legal moves. ← → to review moves.");
+checkServerVersion().then(() => {
+  if (statusEl.textContent.startsWith("Ready")) {
+    setStatus("Ready. Click a piece for legal moves. ← → to review moves.");
+  }
+});

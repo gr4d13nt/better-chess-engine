@@ -27,6 +27,10 @@ enum class EngineVersion : int {
   V16_SeeQsearch = 16,
   V17_DeltaQsearch = 17,
   V18_NullMove = 18,
+  V19_KillerHistory = 19,
+  V20_PersistentTT = 20,
+  V21_PassedPawns = 21,
+  V22_ExtendedPawnStructure = 22,
 };
 
 struct SearchConfig {
@@ -36,6 +40,8 @@ struct SearchConfig {
   int movetime_ms = 0;
   // Game position hashes from the start through the current root (for v14 repetition).
   std::vector<std::uint64_t> repetition_history{};
+  // v20/v21: when true, clears the global TT before this search (new game / loaded FEN).
+  bool clear_transposition_table = false;
 };
 
 struct SearchResult {
@@ -47,6 +53,9 @@ struct SearchResult {
 
 // Versioned search entrypoint.
 SearchResult search_best_move(Board& board, const SearchConfig& cfg);
+
+// Clears the global transposition table (used by v20 on new game).
+void clear_transposition_table();
 
 // Static evaluation from White perspective.
 int evaluate(const Board& board);

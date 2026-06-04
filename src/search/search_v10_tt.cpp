@@ -130,7 +130,7 @@ bool negamax_v10_tt(Board& board, int depth, int alpha, int beta, SearchState& s
   const std::uint64_t key = board.zobrist();
   int tt_score = 0;
   if (depth > 0 && st.tt != nullptr &&
-      st.tt->probe(key, depth, alpha, beta, tt_score)) {
+      st.tt->probe(key, depth, alpha, beta, st.tt_generation, tt_score)) {
     out_score = tt_score;
     return true;
   }
@@ -179,7 +179,7 @@ bool negamax_v10_tt(Board& board, int depth, int alpha, int beta, SearchState& s
     } else if (best >= beta) {
       bound = TTBound::Lower;
     }
-    st.tt->store(key, depth, best, bound);
+    st.tt->store(key, depth, best, bound, st.tt_generation);
   }
 
   out_score = best;

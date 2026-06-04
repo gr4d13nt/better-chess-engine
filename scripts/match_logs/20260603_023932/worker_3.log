@@ -1,0 +1,14 @@
+=== Worker 3 start ===
+Running matches: games_per_side=1, depth=8, max_plies=150, movetime_ms=10, fen_or_book=book, version_a=v10, version_b=v22
+
+Batch 1/2: v10 white vs v22 black, 1 games
+Game (W:v10 vs B:v22) FEN=knbrqbnr/ppp4p/4p1p1/3p1p2/8/PP1PPP2/2P3PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Batch 2/2: v22 white vs v10 black, 1 games
+Game (W:v22 vs B:v10) FEN=knbrqbnr/pp4p1/3p1p1p/2p1p3/3P1P2/P3P1P1/1PP4P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+
+=== Match Summary ===
+Total games: 2
+v10 wins: 1
+v22 wins: 1
+draws:   0
+=== Worker 3 end ===

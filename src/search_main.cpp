@@ -23,7 +23,15 @@ int main(int argc, char** argv) {
   }
   if (argc > 3) {
     const int version = std::stoi(argv[3]);
-    if (version == 18) {
+    if (version == 22) {
+      cfg.version = engine::EngineVersion::V22_ExtendedPawnStructure;
+    } else if (version == 21) {
+      cfg.version = engine::EngineVersion::V21_PassedPawns;
+    } else if (version == 20) {
+      cfg.version = engine::EngineVersion::V20_PersistentTT;
+    } else if (version == 19) {
+      cfg.version = engine::EngineVersion::V19_KillerHistory;
+    } else if (version == 18) {
       cfg.version = engine::EngineVersion::V18_NullMove;
     } else if (version == 17) {
       cfg.version = engine::EngineVersion::V17_DeltaQsearch;

@@ -27,6 +27,18 @@
             <div id="sf-eval-bar" class="eval-bar-white" style="width: 50%"></div>
           </div>
         </div>
+        <div class="material-panel" aria-live="polite">
+          <div class="material-row">
+            <span class="material-label">White</span>
+            <span id="white-captured" class="material-pieces"></span>
+            <span id="white-adv" class="material-adv"></span>
+          </div>
+          <div class="material-row">
+            <span class="material-label">Black</span>
+            <span id="black-captured" class="material-pieces"></span>
+            <span id="black-adv" class="material-adv"></span>
+          </div>
+        </div>
         <p id="status" class="status">Ready.</p>
       </section>
 
@@ -89,7 +101,7 @@
           <p><strong>Custom position:</strong> paste a FEN and click Load position.</p>
           <p><strong>Human vs engine:</strong> click or drag pieces on your turn; legal moves show as green dots.</p>
           <p><strong>Review:</strong> use ← → arrow keys to step through moves (last move highlighted in yellow).</p>
-          <p><strong>Stockfish eval:</strong> bar and score update for the current position (including ← → review).</p>
+          <p><strong>Stockfish:</strong> eval bar, score, and best move (blue highlight on from/to squares).</p>
           <p><strong>Engine vs engine:</strong> choose versions, then Start auto-play.</p>
         </div>
       </section>

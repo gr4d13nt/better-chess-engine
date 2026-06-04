@@ -39,6 +39,10 @@ set -euo pipefail
 #   v16 = v15 search/eval + SEE pruning for losing captures in qsearch (depth>=1 only)
 #   v17 = v16 search + delta pruning for hopeless captures in qsearch (qdepth>=1, margin 150)
 #   v18 = v17 search + null-move pruning in main search (depth>=3, R=2/3)
+#   v19 = v18 search + killer moves and quiet-move history ordering
+#   v20 = v19 search + transposition table kept between moves (clear on new game)
+#   v21 = v20 search + v21 eval (passed pawns bonuses/penalties)
+#   v22 = v20 search + v22 eval (v21 pawn/king split + backward/islands/candidates)
 
 GAMES_PER_SIDE="${1:-2}"
 DEPTH="${2:-3}"

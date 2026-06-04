@@ -11,7 +11,20 @@
   let onEval = null;
   let onStatus = null;
   let latestEval = null;
+  let latestBestMove = null;
   let activeStm = "w";
+
+  function parseUciMove(uci) {
+    if (!uci || uci === "(none)" || uci.length < 4) {
+      return null;
+    }
+    return {
+      from: uci.slice(0, 2),
+      to: uci.slice(2, 4),
+      uci,
+      promotion: uci.length > 4 ? uci[4] : null,
+    };
+  }
 
   function sideToMove(fen) {
     return fen.split(/\s+/)[1] === "b" ? "b" : "w";
@@ -91,13 +104,26 @@
     if (parsed) {
       latestEval = parsed;
       if (onEval) {
-        onEval({ ...parsed, thinking: true });
+        onEval({ ...parsed, bestMove: latestBestMove, thinking: true });
       }
     }
 
     if (line.startsWith("bestmove")) {
+      const parts = line.split(/\s+/);
+      latestBestMove = parseUciMove(parts[1]);
       if (latestEval && onEval) {
-        onEval({ ...latestEval, thinking: false });
+        const payload = { ...latestEval, bestMove: latestBestMove, thinking: false };
+        if (latestBestMove) {
+          payload.text = `${latestEval.text} · ${latestBestMove.uci}`;
+        }
+        onEval(payload);
+      } else if (onEval) {
+        onEval({
+          text: latestBestMove ? latestBestMove.uci : "—",
+          barWidth: 50,
+          bestMove: latestBestMove,
+          thinking: false,
+        });
       }
       currentSearchId = 0;
     }
@@ -119,6 +145,7 @@
     currentSearchId = ++requestId;
     activeStm = sideToMove(fen);
     latestEval = null;
+    latestBestMove = null;
 
     worker.postMessage("stop");
     worker.postMessage(`position fen ${fen}`);

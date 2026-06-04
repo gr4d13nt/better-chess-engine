@@ -25,12 +25,22 @@ void TranspositionTable::clear() {
   for (TTEntry& entry : table_) {
     entry = TTEntry{};
   }
+  generation_ = 0;
+}
+
+std::uint8_t TranspositionTable::new_search() {
+  if (generation_ == 255) {
+    clear();
+    generation_ = 1;
+    return generation_;
+  }
+  return ++generation_;
 }
 
 bool TranspositionTable::probe(std::uint64_t key, int depth, int alpha, int beta,
-                               int& out_score) const {
+                               std::uint8_t generation, int& out_score) const {
   const TTEntry& entry = table_[key & mask_];
-  if (entry.key != key || entry.depth < depth) {
+  if (entry.key != key || entry.generation != generation || entry.depth < depth) {
     return false;
   }
 
@@ -60,9 +70,9 @@ Move TranspositionTable::hash_move(std::uint64_t key) const {
 }
 
 void TranspositionTable::store(std::uint64_t key, int depth, int score, TTBound bound,
-                               const Move& best_move, bool store_move) {
+                               std::uint8_t generation, const Move& best_move, bool store_move) {
   TTEntry& entry = table_[key & mask_];
-  if (entry.key == key && entry.depth > depth) {
+  if (entry.key == key && entry.generation == generation && entry.depth > depth) {
     return;
   }
 
@@ -70,6 +80,7 @@ void TranspositionTable::store(std::uint64_t key, int depth, int score, TTBound 
   entry.depth = static_cast<std::int8_t>(depth);
   entry.score = static_cast<std::int16_t>(score);
   entry.bound = is_mate_score(score) ? TTBound::Exact : bound;
+  entry.generation = generation;
   if (store_move && has_hash_move(best_move)) {
     entry.best_move = best_move;
   }

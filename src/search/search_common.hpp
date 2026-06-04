@@ -23,8 +23,12 @@ struct SearchState {
   bool stopped = false;
   EngineVersion eval_profile = EngineVersion::V1_NoPruning;
   TranspositionTable* tt = nullptr;
+  std::uint8_t tt_generation = 0;
   // Game history + positions on the current search path (v14 repetition).
   std::vector<std::uint64_t> repetition{};
+  // v19: killer moves (2 per ply) and quiet-move history [color][from][to].
+  Move killers[kMaxSearchDepth][2]{};
+  int history[2][64][64]{};
 };
 
 bool should_stop(SearchState& st);
@@ -37,6 +41,11 @@ int evaluate_v8(const Board& board);
 int evaluate_v9(const Board& board);
 int evaluate_v13(const Board& board);
 int evaluate_v15(const Board& board);
+int evaluate_v21(const Board& board);
+int evaluate_v22(const Board& board);
+
+void evaluate_passed_pawns_split(const Board& board, int& mg_white, int& eg_white, int& mg_black,
+                                 int& eg_black);
 // MG/EG components of evaluate_improved (material, PST, mobility, bishop pair).
 void evaluate_improved_split(const Board& board, int& mg_white, int& eg_white, int& mg_black,
                              int& eg_black);
@@ -63,6 +72,14 @@ bool negamax_v16_tt(Board& board, int depth, int alpha, int beta, SearchState& s
 bool negamax_v17_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 
 bool negamax_v18_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v19_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v20_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v21_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v22_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 
 void prioritize_move(MoveList& moves, const Move& prefer);
 

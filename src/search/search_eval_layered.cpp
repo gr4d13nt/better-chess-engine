@@ -12,21 +12,6 @@ constexpr Bitboard file_bb(int file) { return bb::kFileA << file; }
 
 constexpr Bitboard rank_bb(int rank) { return bb::kRank1 << (rank * 8); }
 
-static Bitboard ranks_from(int rank, Color c) {
-  if (c == Color::White) {
-    Bitboard mask = 0;
-    for (int r = rank; r < 8; ++r) {
-      mask |= rank_bb(r);
-    }
-    return mask;
-  }
-  Bitboard mask = 0;
-  for (int r = rank; r >= 0; --r) {
-    mask |= rank_bb(r);
-  }
-  return mask;
-}
-
 static bool friendly_pawn_on_adjacent_file(const Board& board, Color c, int file) {
   const Bitboard pawns = board.pieces(c, PieceType::Pawn);
   if (file > 0 && (pawns & file_bb(file - 1))) {
@@ -36,26 +21,6 @@ static bool friendly_pawn_on_adjacent_file(const Board& board, Color c, int file
     return true;
   }
   return false;
-}
-
-static bool is_passed_pawn(const Board& board, Color c, Square sq) {
-  const int file = bb::file_of(sq);
-  const int rank = bb::rank_of(sq);
-  const Color them = !c;
-
-  Bitboard zone = file_bb(file);
-  if (file > 0) {
-    zone |= file_bb(file - 1);
-  }
-  if (file < 7) {
-    zone |= file_bb(file + 1);
-  }
-
-  const Bitboard enemy_pawns = board.pieces(them, PieceType::Pawn) & zone;
-  if (c == Color::White) {
-    return (enemy_pawns & ranks_from(rank + 1, Color::White)) == 0;
-  }
-  return (enemy_pawns & ranks_from(rank - 1, Color::Black)) == 0;
 }
 
 static void pawn_structure_score_split(const Board& board, Color c, int& mg, int& eg) {
@@ -87,10 +52,8 @@ static void pawn_structure_score_split(const Board& board, Color c, int& mg, int
       mg -= 18;
     }
 
-    if (is_passed_pawn(board, c, sq)) {
-      const int advancement = c == Color::White ? rank : (7 - rank);
-      eg += 20 + advancement * 8;
-    }
+    // Passed pawns: scored only in evaluate_passed_pawns_split (v21+). No EG bonus here
+    // to avoid double-counting when layered pawn is combined with that module.
 
     const int home_rank = c == Color::White ? 1 : 6;
     if (rank == home_rank && files_count[file] > 1) {

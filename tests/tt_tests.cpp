@@ -61,12 +61,13 @@ bool test_tt_probe_store() {
 
   const std::uint64_t key = 0x123456789ABCDEF0ULL;
   int score_out = 0;
-  if (!expect_true(!table.probe(key, 4, -100, 100, score_out), "empty TT misses")) {
+  const std::uint8_t gen = table.new_search();
+  if (!expect_true(!table.probe(key, 4, -100, 100, gen, score_out), "empty TT misses")) {
     return false;
   }
 
-  table.store(key, 4, 42, search_common::TTBound::Exact);
-  if (!expect_true(table.probe(key, 4, -100, 100, score_out), "stored TT hits")) {
+  table.store(key, 4, 42, search_common::TTBound::Exact, gen);
+  if (!expect_true(table.probe(key, 4, -100, 100, gen, score_out), "stored TT hits")) {
     return false;
   }
   return expect_true(score_out == 42, "stored score matches");
@@ -106,7 +107,8 @@ bool test_tt_stores_hash_move() {
 
   const std::uint64_t key = 0xABCDEF0123456789ULL;
   const Move move(Square::E2, Square::E4, MoveFlag::DoublePush);
-  table.store(key, 3, 25, search_common::TTBound::Exact, move, true);
+  const std::uint8_t gen = table.new_search();
+  table.store(key, 3, 25, search_common::TTBound::Exact, gen, move, true);
 
   const Move stored = table.hash_move(key);
   return expect_true(moves_equal(stored, move), "TT returns stored hash move");
