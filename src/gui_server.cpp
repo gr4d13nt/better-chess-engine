@@ -21,6 +21,10 @@ namespace {
 
 std::optional<engine::EngineVersion> parse_version(int v) {
   switch (v) {
+    case 24:
+      return engine::EngineVersion::V24_HangingPieces;
+    case 23:
+      return engine::EngineVersion::V23_Space;
     case 22:
       return engine::EngineVersion::V22_ExtendedPawnStructure;
     case 21:

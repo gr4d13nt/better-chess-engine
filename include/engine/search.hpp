@@ -31,6 +31,8 @@ enum class EngineVersion : int {
   V20_PersistentTT = 20,
   V21_PassedPawns = 21,
   V22_ExtendedPawnStructure = 22,
+  V23_Space = 23,
+  V24_HangingPieces = 24,
 };
 
 struct SearchConfig {

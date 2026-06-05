@@ -31,6 +31,8 @@ add_library(engine STATIC
   src/search/search_v20_tt.cpp
   src/search/search_v21_tt.cpp
   src/search/search_v22_tt.cpp
+  src/search/search_v23_tt.cpp
+  src/search/search_v24_tt.cpp
   src/search/search_ordering.cpp
   src/search/search_eval_phase.cpp
   src/search/search_eval_layered.cpp
@@ -47,6 +49,10 @@ add_library(engine STATIC
   src/search/search_eval_v21.cpp
   src/search/search_eval_pawn_extended.cpp
   src/search/search_eval_v22.cpp
+  src/search/search_eval_space.cpp
+  src/search/search_eval_v23.cpp
+  src/search/search_eval_hanging.cpp
+  src/search/search_eval_v24.cpp
 )
 
 target_include_directories(engine PUBLIC
@@ -110,6 +116,14 @@ add_test(NAME eval_v21 COMMAND eval_v21_tests)
 add_executable(eval_v22_tests tests/eval_v22_tests.cpp)
 target_link_libraries(eval_v22_tests PRIVATE engine)
 add_test(NAME eval_v22 COMMAND eval_v22_tests)
+
+add_executable(eval_v23_tests tests/eval_v23_tests.cpp)
+target_link_libraries(eval_v23_tests PRIVATE engine)
+add_test(NAME eval_v23 COMMAND eval_v23_tests)
+
+add_executable(eval_v24_tests tests/eval_v24_tests.cpp)
+target_link_libraries(eval_v24_tests PRIVATE engine)
+add_test(NAME eval_v24 COMMAND eval_v24_tests)
 
 add_executable(see_tests tests/see_tests.cpp)
 target_link_libraries(see_tests PRIVATE engine)

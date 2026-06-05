@@ -43,6 +43,8 @@ set -euo pipefail
 #   v20 = v19 search + transposition table kept between moves (clear on new game)
 #   v21 = v20 search + v21 eval (passed pawns bonuses/penalties)
 #   v22 = v20 search + v22 eval (v21 pawn/king split + backward/islands/candidates)
+#   v23 = v20 search + v23 eval (v22 + central pawn space)
+#   v24 = v20 search + v24 eval (v23 + hanging/loose pieces)
 
 GAMES_PER_SIDE="${1:-2}"
 DEPTH="${2:-3}"

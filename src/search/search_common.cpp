@@ -241,7 +241,11 @@ void evaluate_improved_split(const Board& board, int& mg_white, int& eg_white, i
 
 int evaluate_for_side_to_move(const Board& board, EngineVersion eval_profile) {
   int white_eval = 0;
-  if (eval_profile == EngineVersion::V22_ExtendedPawnStructure) {
+  if (eval_profile == EngineVersion::V24_HangingPieces) {
+    white_eval = evaluate_v24(board);
+  } else if (eval_profile == EngineVersion::V23_Space) {
+    white_eval = evaluate_v23(board);
+  } else if (eval_profile == EngineVersion::V22_ExtendedPawnStructure) {
     white_eval = evaluate_v22(board);
   } else if (eval_profile == EngineVersion::V21_PassedPawns) {
     white_eval = evaluate_v21(board);

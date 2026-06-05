@@ -1,4 +1,6 @@
 const VERSIONS = [
+  { id: 24, label: "v24 hanging pieces" },
+  { id: 23, label: "v23 space" },
   { id: 22, label: "v22 extended pawn" },
   { id: 21, label: "v21 passed pawns" },
   { id: 20, label: "v20 persistent TT" },

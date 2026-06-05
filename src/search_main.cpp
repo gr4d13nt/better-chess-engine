@@ -23,7 +23,11 @@ int main(int argc, char** argv) {
   }
   if (argc > 3) {
     const int version = std::stoi(argv[3]);
-    if (version == 22) {
+    if (version == 24) {
+      cfg.version = engine::EngineVersion::V24_HangingPieces;
+    } else if (version == 23) {
+      cfg.version = engine::EngineVersion::V23_Space;
+    } else if (version == 22) {
       cfg.version = engine::EngineVersion::V22_ExtendedPawnStructure;
     } else if (version == 21) {
       cfg.version = engine::EngineVersion::V21_PassedPawns;

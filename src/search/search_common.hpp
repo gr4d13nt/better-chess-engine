@@ -43,6 +43,8 @@ int evaluate_v13(const Board& board);
 int evaluate_v15(const Board& board);
 int evaluate_v21(const Board& board);
 int evaluate_v22(const Board& board);
+int evaluate_v23(const Board& board);
+int evaluate_v24(const Board& board);
 
 void evaluate_passed_pawns_split(const Board& board, int& mg_white, int& eg_white, int& mg_black,
                                  int& eg_black);
@@ -80,6 +82,10 @@ bool negamax_v20_tt(Board& board, int depth, int alpha, int beta, SearchState& s
 bool negamax_v21_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 
 bool negamax_v22_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v23_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v24_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 
 void prioritize_move(MoveList& moves, const Move& prefer);
 

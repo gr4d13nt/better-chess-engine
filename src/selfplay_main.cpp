@@ -12,6 +12,12 @@
 namespace {
 
 engine::EngineVersion parse_version(int v) {
+  if (v == 24) {
+    return engine::EngineVersion::V24_HangingPieces;
+  }
+  if (v == 23) {
+    return engine::EngineVersion::V23_Space;
+  }
   if (v == 22) {
     return engine::EngineVersion::V22_ExtendedPawnStructure;
   }
@@ -76,6 +82,12 @@ engine::EngineVersion parse_version(int v) {
 }
 
 const char* version_name(engine::EngineVersion v) {
+  if (v == engine::EngineVersion::V24_HangingPieces) {
+    return "v24-hanging";
+  }
+  if (v == engine::EngineVersion::V23_Space) {
+    return "v23-space";
+  }
   if (v == engine::EngineVersion::V22_ExtendedPawnStructure) {
     return "v22-extended-pawn";
   }

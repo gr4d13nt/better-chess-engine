@@ -37,7 +37,9 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
                       cfg.version == EngineVersion::V19_KillerHistory ||
                       cfg.version == EngineVersion::V20_PersistentTT ||
                       cfg.version == EngineVersion::V21_PassedPawns ||
-                      cfg.version == EngineVersion::V22_ExtendedPawnStructure;
+                      cfg.version == EngineVersion::V22_ExtendedPawnStructure ||
+                      cfg.version == EngineVersion::V23_Space ||
+                      cfg.version == EngineVersion::V24_HangingPieces;
   const bool use_root_pv = cfg.version == EngineVersion::V11_TTHashMove ||
                            cfg.version == EngineVersion::V12_CheckExtension ||
                            cfg.version == EngineVersion::V13_MopUpEval ||
@@ -49,10 +51,14 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
                            cfg.version == EngineVersion::V19_KillerHistory ||
                            cfg.version == EngineVersion::V20_PersistentTT ||
                            cfg.version == EngineVersion::V21_PassedPawns ||
-                           cfg.version == EngineVersion::V22_ExtendedPawnStructure;
+                           cfg.version == EngineVersion::V22_ExtendedPawnStructure ||
+                           cfg.version == EngineVersion::V23_Space ||
+                           cfg.version == EngineVersion::V24_HangingPieces;
   const bool persistent_tt = cfg.version == EngineVersion::V20_PersistentTT ||
                              cfg.version == EngineVersion::V21_PassedPawns ||
-                             cfg.version == EngineVersion::V22_ExtendedPawnStructure;
+                             cfg.version == EngineVersion::V22_ExtendedPawnStructure ||
+                             cfg.version == EngineVersion::V23_Space ||
+                             cfg.version == EngineVersion::V24_HangingPieces;
   if (use_tt) {
     if (!persistent_tt || cfg.clear_transposition_table) {
       tt_clear();
@@ -72,6 +78,10 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
       bool ok = false;
       if (cfg.version == EngineVersion::V1_NoPruning) {
         ok = negamax_v1_no_pruning(board, depth - 1, st, child_score);
+      } else if (cfg.version == EngineVersion::V24_HangingPieces) {
+        ok = negamax_v24_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
+      } else if (cfg.version == EngineVersion::V23_Space) {
+        ok = negamax_v23_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
       } else if (cfg.version == EngineVersion::V22_ExtendedPawnStructure) {
         ok = negamax_v22_tt(board, depth - 1, -root_beta, -root_alpha, st, child_score);
       } else if (cfg.version == EngineVersion::V21_PassedPawns) {
@@ -125,7 +135,9 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
   };
 
   EngineVersion eval_profile = EngineVersion::V1_NoPruning;
-  if (cfg.version == EngineVersion::V22_ExtendedPawnStructure ||
+  if (cfg.version == EngineVersion::V24_HangingPieces ||
+      cfg.version == EngineVersion::V23_Space ||
+      cfg.version == EngineVersion::V22_ExtendedPawnStructure ||
       cfg.version == EngineVersion::V21_PassedPawns ||
       cfg.version == EngineVersion::V20_PersistentTT ||
       cfg.version == EngineVersion::V19_KillerHistory ||
@@ -133,7 +145,11 @@ SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
       cfg.version == EngineVersion::V17_DeltaQsearch ||
       cfg.version == EngineVersion::V16_SeeQsearch ||
       cfg.version == EngineVersion::V15_PiecePlacement) {
-    if (cfg.version == EngineVersion::V22_ExtendedPawnStructure) {
+    if (cfg.version == EngineVersion::V24_HangingPieces) {
+      eval_profile = EngineVersion::V24_HangingPieces;
+    } else if (cfg.version == EngineVersion::V23_Space) {
+      eval_profile = EngineVersion::V23_Space;
+    } else if (cfg.version == EngineVersion::V22_ExtendedPawnStructure) {
       eval_profile = EngineVersion::V22_ExtendedPawnStructure;
     } else if (cfg.version == EngineVersion::V21_PassedPawns) {
       eval_profile = EngineVersion::V21_PassedPawns;
