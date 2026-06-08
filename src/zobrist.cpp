@@ -72,4 +72,27 @@ std::uint64_t zobrist_hash(const Board& board) {
   return hash;
 }
 
+std::uint64_t zobrist_piece_key(Color color, PieceType piece_type, Square square) {
+  init_tables();
+  return piece_zobrist[static_cast<int>(color)][static_cast<int>(piece_type)][square_index(square)];
+}
+
+std::uint64_t zobrist_side_key() {
+  init_tables();
+  return side_zobrist;
+}
+
+std::uint64_t zobrist_castling_key(std::uint8_t castling_rights) {
+  init_tables();
+  return castling_zobrist[castling_rights & 0xF];
+}
+
+std::uint64_t zobrist_ep_key(Square ep_square) {
+  if (ep_square == Square::None) {
+    return 0;
+  }
+  init_tables();
+  return ep_file_zobrist[bb::file_of(ep_square)];
+}
+
 }  // namespace engine

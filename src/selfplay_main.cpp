@@ -269,6 +269,7 @@ int main(int argc, char** argv) {
     cfg.depth = depth;
     cfg.version = (board.side_to_move() == engine::Color::White) ? white : black;
     cfg.movetime_ms = movetime_ms;
+    cfg.use_opening_book = engine::version_uses_opening_book(cfg.version);
 
     cfg.repetition_history = repetition_hashes;
 

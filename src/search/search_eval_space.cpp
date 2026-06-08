@@ -1,6 +1,5 @@
 #include "search_eval_space.hpp"
 
-#include "engine/attacks.hpp"
 #include "search_eval_phase.hpp"
 
 namespace engine::search_common {
@@ -14,13 +13,11 @@ constexpr int kSafeSquareMg = 4;
 constexpr int kCentralPawnMg = 8;
 constexpr int kCentralPawnEg = 2;
 
-Bitboard pawn_attack_mask(const Board& board, Color c) {
-  Bitboard mask = 0;
-  Bitboard pawns = board.pieces(c, PieceType::Pawn);
-  while (pawns) {
-    mask |= pawn_attacks(c, bb::pop_lsb(pawns));
+Bitboard pawn_attack_mask(Color c, Bitboard pawns) {
+  if (c == Color::White) {
+    return bb::north_west(pawns) | bb::north_east(pawns);
   }
-  return mask;
+  return bb::south_west(pawns) | bb::south_east(pawns);
 }
 
 Bitboard space_zone_mask(Color c) {
@@ -42,28 +39,17 @@ void space_side(const Board& board, Color c, int& mg, int& eg) {
 
   const Color them = !c;
   const Bitboard zone = space_zone_mask(c);
-  const Bitboard our_pawn_attacks = pawn_attack_mask(board, c);
-  const Bitboard their_pawn_attacks = pawn_attack_mask(board, them);
+  const Bitboard pawns = board.pieces(c, PieceType::Pawn);
+  const Bitboard our_pawn_attacks = pawn_attack_mask(c, pawns);
+  const Bitboard their_pawn_attacks = pawn_attack_mask(them, board.pieces(them, PieceType::Pawn));
+  const Bitboard safe_squares = zone & our_pawn_attacks & ~their_pawn_attacks;
 
-  Bitboard scan = zone;
-  while (scan) {
-    const Square sq = bb::pop_lsb(scan);
-    if (our_pawn_attacks & bb::square_bb(sq)) {
-      if ((their_pawn_attacks & bb::square_bb(sq)) == 0) {
-        mg += kSafeSquareMg;
-      }
-    }
-  }
+  mg += kSafeSquareMg * bb::popcount(safe_squares);
 
-  Bitboard pawns = board.pieces(c, PieceType::Pawn);
-  while (pawns) {
-    const Square sq = bb::pop_lsb(pawns);
-    const int file = bb::file_of(sq);
-    if (file == 3 || file == 4) {
-      mg += kCentralPawnMg;
-      eg += kCentralPawnEg;
-    }
-  }
+  const Bitboard central_pawns = pawns & (file_bb(3) | file_bb(4));
+  const int central_count = bb::popcount(central_pawns);
+  mg += kCentralPawnMg * central_count;
+  eg += kCentralPawnEg * central_count;
 
   const int scaled = (mg * phase) / kPhaseMax;
   mg = scaled;

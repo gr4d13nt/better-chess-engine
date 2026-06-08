@@ -64,6 +64,7 @@ int main() {
   engine::SearchConfig cfg{};
   cfg.depth = 4;
   cfg.version = engine::EngineVersion::V25_OpeningBook;
+  cfg.use_opening_book = true;
 
   board.set_startpos();
   const engine::SearchResult start = engine::search_best_move(board, cfg);

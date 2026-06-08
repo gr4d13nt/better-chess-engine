@@ -283,13 +283,14 @@ function canInteract() {
 }
 
 function searchConfig(side) {
+  const version = Number(side === "w" ? whiteVersionEl.value : blackVersionEl.value);
   const config = {
     fen: game.fen(),
     repetition_fens: fenHistory.slice(0, viewIndex + 1),
     depth: Number(depthEl.value),
     movetime_ms: Number(movetimeEl.value),
-    version: Number(side === "w" ? whiteVersionEl.value : blackVersionEl.value),
-    use_book: true,
+    version,
+    use_book: version >= 25,
   };
   if (clearTtOnNextSearch) {
     config.clear_tt = true;

@@ -39,13 +39,7 @@ bool is_better_smp_result(const SearchResult& candidate, const SearchResult& cur
 }
 
 SearchResult lazy_smp_search(Board& board, const SearchConfig& cfg, int thread_count) {
-  const bool use_book = cfg.version == EngineVersion::V25_OpeningBook ||
-                        cfg.version == EngineVersion::V26_LMR ||
-                        cfg.version == EngineVersion::V27_PVS ||
-                        cfg.version == EngineVersion::V28_FutilityLmp ||
-                        cfg.version == EngineVersion::V29_LazySMP ||
-                        cfg.version == EngineVersion::V30_TimeManagement ||
-                        cfg.use_opening_book;
+  const bool use_book = opening_book_enabled(cfg);
   if (use_book) {
     if (const auto book_move = probe_opening_book(board)) {
       SearchResult result{};

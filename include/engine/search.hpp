@@ -46,6 +46,12 @@ enum class EngineVersion : int {
   V30_TimeManagement = 30,
 };
 
+inline bool version_uses_opening_book(EngineVersion v) {
+  return v == EngineVersion::V25_OpeningBook || v == EngineVersion::V26_LMR ||
+         v == EngineVersion::V27_PVS || v == EngineVersion::V28_FutilityLmp ||
+         v == EngineVersion::V29_LazySMP || v == EngineVersion::V30_TimeManagement;
+}
+
 struct SearchConfig {
   int depth = 4;
   EngineVersion version = EngineVersion::V1_NoPruning;
@@ -57,7 +63,7 @@ struct SearchConfig {
   std::vector<std::uint64_t> repetition_history{};
   // v20/v21: when true, clears the global TT before this search (new game / loaded FEN).
   bool clear_transposition_table = false;
-  // When true (or v25–v30), play weighted-random moves from the Polyglot opening book when available.
+  // v25–v30 only: when true, play from the Polyglot book before searching.
   bool use_opening_book = false;
   // Lazy SMP internals (set by search_dispatch / lazy SMP wrapper).
   search_common::TranspositionTable* local_tt = nullptr;
@@ -65,6 +71,10 @@ struct SearchConfig {
   // Lazy SMP: add to iterative-deepening depth (0 = same as main, 1 = +1 ply).
   int smp_depth_offset = 0;
 };
+
+inline bool opening_book_enabled(const SearchConfig& cfg) {
+  return version_uses_opening_book(cfg.version) && cfg.use_opening_book;
+}
 
 struct SearchResult {
   Move best_move{};

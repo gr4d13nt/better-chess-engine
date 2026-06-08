@@ -26,11 +26,6 @@ Bitboard between_squares(Square a, Square b) {
   return 0;
 }
 
-bool promotion_rank(Color us, Square sq) {
-  const int r = bb::rank_of(sq);
-  return (us == Color::White && r == 7) || (us == Color::Black && r == 0);
-}
-
 void add_promotions(MoveList& list, Square from, Square to, bool capture) {
   for (PieceType pt :
        {PieceType::Queen, PieceType::Rook, PieceType::Bishop, PieceType::Knight}) {
@@ -44,62 +39,76 @@ bool blocked_by_pin(Bitboard pinned_bb, Square from) {
   return pinned_bb & bb::square_bb(from);
 }
 
+void add_pawn_moves_from_targets(Bitboard targets, int from_delta, MoveList& list, MoveFlag flag) {
+  while (targets) {
+    const Square to = bb::pop_lsb(targets);
+    const Square from = static_cast<Square>(static_cast<int>(to) + from_delta);
+    list.add(Move(from, to, flag));
+  }
+}
+
+void add_pawn_push_moves(Color us, Bitboard quiet_targets, Bitboard promo_targets, MoveList& list) {
+  const int push_delta = us == Color::White ? -8 : 8;
+  add_pawn_moves_from_targets(quiet_targets, push_delta, list, MoveFlag::Quiet);
+  while (promo_targets) {
+    const Square to = bb::pop_lsb(promo_targets);
+    const Square from = static_cast<Square>(static_cast<int>(to) + push_delta);
+    add_promotions(list, from, to, false);
+  }
+}
+
+void add_pawn_capture_moves(Bitboard quiet_targets, Bitboard promo_targets, int from_delta, MoveList& list) {
+  add_pawn_moves_from_targets(quiet_targets, from_delta, list, MoveFlag::Capture);
+  while (promo_targets) {
+    const Square to = bb::pop_lsb(promo_targets);
+    const Square from = static_cast<Square>(static_cast<int>(to) + from_delta);
+    add_promotions(list, from, to, true);
+  }
+}
+
+void generate_pawn_bulk(Color us, Bitboard pawns, Bitboard occ, Bitboard enemy, Bitboard allowed_targets,
+                        MoveList& list) {
+  if (!pawns) {
+    return;
+  }
+
+  if (us == Color::White) {
+    const Bitboard push_one = bb::north(pawns) & ~occ & allowed_targets;
+    add_pawn_push_moves(us, push_one & ~bb::kRank8, push_one & bb::kRank8, list);
+
+    const Bitboard double_targets =
+        bb::north(bb::north(pawns & bb::kRank2) & ~occ) & ~occ & allowed_targets;
+    add_pawn_moves_from_targets(double_targets, -16, list, MoveFlag::DoublePush);
+
+    const Bitboard cap_left = bb::north_west(pawns) & enemy & allowed_targets;
+    add_pawn_capture_moves(cap_left & ~bb::kRank8, cap_left & bb::kRank8, -7, list);
+
+    const Bitboard cap_right = bb::north_east(pawns) & enemy & allowed_targets;
+    add_pawn_capture_moves(cap_right & ~bb::kRank8, cap_right & bb::kRank8, -9, list);
+  } else {
+    const Bitboard push_one = bb::south(pawns) & ~occ & allowed_targets;
+    add_pawn_push_moves(us, push_one & ~bb::kRank1, push_one & bb::kRank1, list);
+
+    const Bitboard double_targets =
+        bb::south(bb::south(pawns & bb::kRank7) & ~occ) & ~occ & allowed_targets;
+    add_pawn_moves_from_targets(double_targets, 16, list, MoveFlag::DoublePush);
+
+    const Bitboard cap_left = bb::south_east(pawns) & enemy & allowed_targets;
+    add_pawn_capture_moves(cap_left & ~bb::kRank1, cap_left & bb::kRank1, 7, list);
+
+    const Bitboard cap_right = bb::south_west(pawns) & enemy & allowed_targets;
+    add_pawn_capture_moves(cap_right & ~bb::kRank1, cap_right & bb::kRank1, 9, list);
+  }
+}
+
 void generate_pawns(const Board& board, Color us, Bitboard pin_ray, Bitboard pinned_bb, MoveList& list) {
   const Color them = !us;
   const Bitboard enemy = board.color_bb(them);
   const Bitboard occ = board.occupied();
-  Bitboard pawns = board.pieces(us, PieceType::Pawn);
-  const int push = us == Color::White ? 8 : -8;
-  const int push2 = push * 2;
+  const Bitboard pawns = board.pieces(us, PieceType::Pawn);
 
-  while (pawns) {
-    const Square from = bb::pop_lsb(pawns);
-    const int from_i = static_cast<int>(from);
-    const int file = bb::file_of(from);
-    const Square to = static_cast<Square>(from_i + push);
-
-    if (!(occ & bb::square_bb(to))) {
-      if (!blocked_by_pin(pinned_bb, from) || (pin_ray & bb::square_bb(to))) {
-        if (promotion_rank(us, to)) {
-          add_promotions(list, from, to, false);
-        } else {
-          list.add(Move(from, to, MoveFlag::Quiet));
-          const bool start_rank = (us == Color::White && bb::rank_of(from) == 1) ||
-                                  (us == Color::Black && bb::rank_of(from) == 6);
-          if (start_rank) {
-            const Square mid = static_cast<Square>(from_i + push);
-            const Square to2 = static_cast<Square>(from_i + push2);
-            if (!(occ & bb::square_bb(mid)) && !(occ & bb::square_bb(to2))) {
-              list.add(Move(from, to2, MoveFlag::DoublePush));
-            }
-          }
-        }
-      }
-    }
-
-    const int cap_deltas[2] = {
-        us == Color::White ? 7 : -9,
-        us == Color::White ? 9 : -7,
-    };
-    const bool can_cap[2] = {file > 0, file < 7};
-    for (int i = 0; i < 2; ++i) {
-      if (!can_cap[i]) {
-        continue;
-      }
-      const Square cap_to = static_cast<Square>(from_i + cap_deltas[i]);
-      if (!(enemy & bb::square_bb(cap_to))) {
-        continue;
-      }
-      if (blocked_by_pin(pinned_bb, from) && !(pin_ray & bb::square_bb(cap_to))) {
-        continue;
-      }
-      if (promotion_rank(us, cap_to)) {
-        add_promotions(list, from, cap_to, true);
-      } else {
-        list.add(Move(from, cap_to, MoveFlag::Capture));
-      }
-    }
-  }
+  generate_pawn_bulk(us, pawns & ~pinned_bb, occ, enemy, ~0ULL, list);
+  generate_pawn_bulk(us, pawns & pinned_bb, occ, enemy, pin_ray, list);
 
   if (board.ep_square() != Square::None) {
     const Square ep = board.ep_square();
@@ -111,7 +120,7 @@ void generate_pawns(const Board& board, Color us, Bitboard pin_ray, Bitboard pin
       if (ep_file > 0) {
         const Square from = static_cast<Square>(from_rank * 8 + ep_file - 1);
         if (board.pieces(us, PieceType::Pawn) & bb::square_bb(from)) {
-          if (!blocked_by_pin(pinned_bb, from)) {
+          if (!(pinned_bb & bb::square_bb(from))) {
             list.add(Move(from, ep, MoveFlag::EnPassant));
           }
         }
@@ -119,7 +128,7 @@ void generate_pawns(const Board& board, Color us, Bitboard pin_ray, Bitboard pin
       if (ep_file < 7) {
         const Square from = static_cast<Square>(from_rank * 8 + ep_file + 1);
         if (board.pieces(us, PieceType::Pawn) & bb::square_bb(from)) {
-          if (!blocked_by_pin(pinned_bb, from)) {
+          if (!(pinned_bb & bb::square_bb(from))) {
             list.add(Move(from, ep, MoveFlag::EnPassant));
           }
         }
@@ -177,7 +186,61 @@ bool square_attacked(const Board& board, Square sq, Color by) {
   return attackers_to(board, sq, by) != 0;
 }
 
-void generate_castling(Board& board, Color us, Bitboard checkers, MoveList& list) {
+Bitboard attackers_to_occ(const Board& board, Square sq, Color by_color, Bitboard occ,
+                          Bitboard removed_enemy) {
+  Bitboard attackers = 0;
+
+  attackers |= pawn_attacks(!by_color, sq) & board.pieces(by_color, PieceType::Pawn) & ~removed_enemy;
+  attackers |= knight_attacks(sq) & board.pieces(by_color, PieceType::Knight) & ~removed_enemy;
+  attackers |= king_attacks(sq) & board.pieces(by_color, PieceType::King) & ~removed_enemy;
+
+  Bitboard bishops =
+      (board.pieces(by_color, PieceType::Bishop) | board.pieces(by_color, PieceType::Queen)) & ~removed_enemy;
+  while (bishops) {
+    const Square from = bb::pop_lsb(bishops);
+    if (bishop_attacks(from, occ) & bb::square_bb(sq)) {
+      attackers |= bb::square_bb(from);
+    }
+  }
+
+  Bitboard rooks =
+      (board.pieces(by_color, PieceType::Rook) | board.pieces(by_color, PieceType::Queen)) & ~removed_enemy;
+  while (rooks) {
+    const Square from = bb::pop_lsb(rooks);
+    if (rook_attacks(from, occ) & bb::square_bb(sq)) {
+      attackers |= bb::square_bb(from);
+    }
+  }
+
+  return attackers;
+}
+
+bool leaves_king_in_check(const Board& board, Color us, Color them, Square king_sq, const Move& move) {
+  if (move.flag == MoveFlag::Castle) {
+    return false;
+  }
+
+  Bitboard occ = board.occupied();
+  const Bitboard from_bb = bb::square_bb(move.from);
+  const Bitboard to_bb = bb::square_bb(move.to);
+  Bitboard removed_enemy = 0;
+
+  if (move.flag == MoveFlag::EnPassant) {
+    const Square cap_sq = us == Color::White ? bb::shift_down(move.to) : bb::shift_up(move.to);
+    removed_enemy = bb::square_bb(cap_sq);
+    occ = (occ & ~from_bb & ~removed_enemy) | to_bb;
+  } else {
+    if (occ & to_bb & board.color_bb(them)) {
+      removed_enemy = to_bb;
+    }
+    occ = (occ & ~from_bb) | to_bb;
+  }
+
+  const Square king_sq_after = move.from == king_sq ? move.to : king_sq;
+  return attackers_to_occ(board, king_sq_after, them, occ, removed_enemy) != 0;
+}
+
+void generate_castling(const Board& board, Color us, Bitboard checkers, MoveList& list) {
   if (checkers) {
     return;
   }
@@ -219,7 +282,7 @@ void generate_castling(Board& board, Color us, Bitboard checkers, MoveList& list
   }
 }
 
-void generate_pseudo_legal(Board& board, Color us, Bitboard pin_ray, Bitboard pinned_bb, Square king_sq,
+void generate_pseudo_legal(const Board& board, Color us, Bitboard pin_ray, Bitboard pinned_bb, Square king_sq,
                            Bitboard checkers, MoveList& pseudo) {
   if (bb::popcount(checkers) > 1) {
     generate_king(board, us, pseudo);
@@ -271,35 +334,11 @@ void generate_pseudo_legal(Board& board, Color us, Bitboard pin_ray, Bitboard pi
 }  // namespace
 
 Bitboard attackers_to(const Board& board, Square sq, Color by_color) {
-  const Bitboard occ = board.occupied();
-  Bitboard attackers = 0;
-
-  attackers |= pawn_attacks(!by_color, sq) & board.pieces(by_color, PieceType::Pawn);
-  attackers |= knight_attacks(sq) & board.pieces(by_color, PieceType::Knight);
-  attackers |= king_attacks(sq) & board.pieces(by_color, PieceType::King);
-
-  Bitboard bishops = board.pieces(by_color, PieceType::Bishop) | board.pieces(by_color, PieceType::Queen);
-  while (bishops) {
-    const Square from = bb::pop_lsb(bishops);
-    if (bishop_attacks(from, occ) & bb::square_bb(sq)) {
-      attackers |= bb::square_bb(from);
-    }
-  }
-
-  Bitboard rooks = board.pieces(by_color, PieceType::Rook) | board.pieces(by_color, PieceType::Queen);
-  while (rooks) {
-    const Square from = bb::pop_lsb(rooks);
-    if (rook_attacks(from, occ) & bb::square_bb(sq)) {
-      attackers |= bb::square_bb(from);
-    }
-  }
-
-  return attackers;
+  return attackers_to_occ(board, sq, by_color, board.occupied(), 0);
 }
 
-void generate_legal_moves(const Board& board_in, MoveList& out) {
+void generate_legal_moves(const Board& board, MoveList& out) {
   out.clear();
-  Board board = board_in;
 
   const Color us = board.side_to_move();
   const Color them = !us;
@@ -337,12 +376,9 @@ void generate_legal_moves(const Board& board_in, MoveList& out) {
 
   for (int i = 0; i < pseudo.count; ++i) {
     const Move& m = pseudo.moves[i];
-    Undo undo;
-    board.make_move(m, undo);
-    if (!board.in_check(us)) {
+    if (!leaves_king_in_check(board, us, them, king_sq, m)) {
       out.add(m);
     }
-    board.unmake_move(m, undo);
   }
 }
 

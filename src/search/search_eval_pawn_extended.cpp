@@ -36,17 +36,6 @@ Bitboard ranks_from(int rank, Color c) {
   return mask;
 }
 
-bool friendly_pawn_on_adjacent_file(const Board& board, Color c, int file) {
-  const Bitboard pawns = board.pieces(c, PieceType::Pawn);
-  if (file > 0 && (pawns & file_bb(file - 1))) {
-    return true;
-  }
-  if (file < 7 && (pawns & file_bb(file + 1))) {
-    return true;
-  }
-  return false;
-}
-
 bool is_passed_pawn(const Board& board, Color c, Square sq) {
   const int file = bb::file_of(sq);
   const int rank = bb::rank_of(sq);
@@ -140,33 +129,36 @@ bool is_candidate_passed_pawn(const Board& board, Color c, Square sq) {
   return is_passed_pawn(board, c, ahead);
 }
 
-int count_pawn_islands(const Board& board, Color c) {
-  const Bitboard pawns = board.pieces(c, PieceType::Pawn);
-  bool has_file[8] = {};
-  Bitboard scan = pawns;
-  while (scan) {
-    has_file[bb::file_of(bb::pop_lsb(scan))] = true;
+int pawn_file_mask(Bitboard pawns) {
+  int mask = 0;
+  for (int file = 0; file < 8; ++file) {
+    if (pawns & file_bb(file)) {
+      mask |= 1 << file;
+    }
   }
+  return mask;
+}
 
+int count_file_islands(int file_mask) {
   int islands = 0;
-  bool visited[8] = {};
-  for (int f = 0; f < 8; ++f) {
-    if (!has_file[f] || visited[f]) {
+  int visited = 0;
+  for (int file = 0; file < 8; ++file) {
+    if ((file_mask & (1 << file)) == 0 || (visited & (1 << file)) != 0) {
       continue;
     }
     ++islands;
     int stack[8];
     int top = 0;
-    stack[top++] = f;
-    visited[f] = true;
+    stack[top++] = file;
+    visited |= 1 << file;
     while (top > 0) {
       const int cur = stack[--top];
-      if (cur > 0 && has_file[cur - 1] && !visited[cur - 1]) {
-        visited[cur - 1] = true;
+      if (cur > 0 && (file_mask & (1 << (cur - 1))) && (visited & (1 << (cur - 1))) == 0) {
+        visited |= 1 << (cur - 1);
         stack[top++] = cur - 1;
       }
-      if (cur < 7 && has_file[cur + 1] && !visited[cur + 1]) {
-        visited[cur + 1] = true;
+      if (cur < 7 && (file_mask & (1 << (cur + 1))) && (visited & (1 << (cur + 1))) == 0) {
+        visited |= 1 << (cur + 1);
         stack[top++] = cur + 1;
       }
     }
@@ -180,28 +172,17 @@ void pawn_doubled_side(const Board& board, Color c, int& mg, int& eg) {
   (void)eg;
 
   const Bitboard pawns = board.pieces(c, PieceType::Pawn);
-  int files_count[8] = {};
-  Bitboard scan = pawns;
-  while (scan) {
-    ++files_count[bb::file_of(bb::pop_lsb(scan))];
-  }
-
+  Bitboard doubled_file_mask = 0;
   for (int file = 0; file < 8; ++file) {
-    if (files_count[file] > 1) {
-      mg -= kDoubledMgPerExtra * (files_count[file] - 1);
+    const int count = bb::popcount(pawns & file_bb(file));
+    if (count > 1) {
+      doubled_file_mask |= file_bb(file);
+      mg -= kDoubledMgPerExtra * (count - 1);
     }
   }
 
-  scan = pawns;
-  while (scan) {
-    const Square sq = bb::pop_lsb(scan);
-    const int file = bb::file_of(sq);
-    const int rank = bb::rank_of(sq);
-    const int home_rank = c == Color::White ? 1 : 6;
-    if (rank == home_rank && files_count[file] > 1) {
-      mg -= kDoubledHomeRankMg;
-    }
-  }
+  const Bitboard home_rank = c == Color::White ? bb::kRank2 : bb::kRank7;
+  mg -= kDoubledHomeRankMg * bb::popcount(pawns & home_rank & doubled_file_mask);
 }
 
 void pawn_extended_side(const Board& board, Color c, int& mg, int& eg) {
@@ -209,15 +190,35 @@ void pawn_extended_side(const Board& board, Color c, int& mg, int& eg) {
   eg = 0;
 
   const Bitboard pawns = board.pieces(c, PieceType::Pawn);
+  if (!pawns) {
+    return;
+  }
+
+  bool file_has_pawn[8] = {};
+  for (int file = 0; file < 8; ++file) {
+    file_has_pawn[file] = (pawns & file_bb(file)) != 0;
+  }
+
+  Bitboard non_isolated_files = 0;
+  for (int file = 0; file < 8; ++file) {
+    if (!file_has_pawn[file]) {
+      continue;
+    }
+    if (file > 0 && file_has_pawn[file - 1]) {
+      non_isolated_files |= file_bb(file);
+    }
+    if (file < 7 && file_has_pawn[file + 1]) {
+      non_isolated_files |= file_bb(file);
+    }
+  }
+
+  const Bitboard isolated = pawns & ~non_isolated_files;
+  mg -= kIsolatedMg * bb::popcount(isolated);
+
   Bitboard scan = pawns;
   while (scan) {
     const Square sq = bb::pop_lsb(scan);
-    const int file = bb::file_of(sq);
     const int rank = bb::rank_of(sq);
-
-    if (!friendly_pawn_on_adjacent_file(board, c, file)) {
-      mg -= kIsolatedMg;
-    }
 
     if (is_backward_pawn(board, c, sq)) {
       mg -= kBackwardMg;
@@ -231,7 +232,7 @@ void pawn_extended_side(const Board& board, Color c, int& mg, int& eg) {
     }
   }
 
-  const int islands = count_pawn_islands(board, c);
+  const int islands = count_file_islands(pawn_file_mask(pawns));
   if (islands > 1) {
     mg -= kIslandPenaltyMg * (islands - 1);
   }

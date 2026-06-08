@@ -43,11 +43,7 @@ SearchResult search_best_move_single(Board& board, const SearchConfig& cfg) {
     return result;
   }
 
-  const bool use_book = cfg.version == EngineVersion::V25_OpeningBook ||
-                        cfg.version == EngineVersion::V26_LMR ||
-                        cfg.version == EngineVersion::V27_PVS ||
-                        version_uses_v28_kernel(cfg.version) ||
-                        cfg.use_opening_book;
+  const bool use_book = opening_book_enabled(cfg);
   if (use_book) {
     if (const auto book_move = probe_opening_book(board)) {
       SearchResult result{};

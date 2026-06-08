@@ -223,7 +223,9 @@ std::string handle_search(const std::string& body) {
   cfg.version = *version;
   cfg.repetition_history = engine::repetition_hashes_from_fens(json_string_array(body, "repetition_fens"));
   cfg.clear_transposition_table = json_bool_token(body, "clear_tt", false);
-  cfg.use_opening_book = json_bool_token(body, "use_book", true);
+  const bool version_has_book = engine::version_uses_opening_book(*version);
+  cfg.use_opening_book =
+      version_has_book && json_bool_token(body, "use_book", true);
 
   const engine::SearchResult result = engine::search_best_move(board, cfg);
   if (!result.has_move) {
@@ -266,7 +268,7 @@ int main(int argc, char** argv) {
   });
 
   server.Get("/api/health", [](const httplib::Request&, httplib::Response& res) {
-    res.set_content(R"({"ok":true,"max_version":28})", "application/json");
+    res.set_content(R"({"ok":true,"max_version":30})", "application/json");
   });
 
   std::cout << "Chess engine web UI\n";

@@ -91,6 +91,7 @@ int main(int argc, char** argv) {
   if (argc > 5) {
     cfg.num_threads = std::stoi(argv[5]);
   }
+  cfg.use_opening_book = engine::version_uses_opening_book(cfg.version);
 
   if (fen == "startpos") {
     board.set_startpos();

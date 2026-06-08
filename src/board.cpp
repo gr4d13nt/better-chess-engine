@@ -75,6 +75,7 @@ void Board::clear() {
     }
   }
   color_bb_ = {0, 0};
+  mailbox_.fill(Piece::None);
   occupied_ = 0;
   side_ = Color::White;
   ep_square_ = Square::None;
@@ -98,6 +99,32 @@ void Board::refresh_derived() {
     }
   }
   occupied_ = color_bb_[0] | color_bb_[1];
+}
+
+void Board::set_piece_square(Color c, PieceType pt, Square sq, bool on) {
+  const int ci = static_cast<int>(c);
+  const int pti = static_cast<int>(pt);
+  const int sq_i = square_index(sq);
+  const Bitboard mask = bb::square_bb(sq);
+  if (on) {
+    pieces_[ci][pti] |= mask;
+    color_bb_[ci] |= mask;
+    occupied_ |= mask;
+    mailbox_[sq_i] = make_piece(c, pt);
+    zobrist_key_ ^= zobrist_piece_key(c, pt, sq);
+  } else {
+    pieces_[ci][pti] &= ~mask;
+    color_bb_[ci] &= ~mask;
+    occupied_ &= ~mask;
+    mailbox_[sq_i] = Piece::None;
+    zobrist_key_ ^= zobrist_piece_key(c, pt, sq);
+  }
+}
+
+void Board::update_zobrist_state(std::uint8_t old_castling_rights, Square old_ep_square) {
+  zobrist_key_ ^= zobrist_castling_key(old_castling_rights) ^ zobrist_castling_key(castling_rights_);
+  zobrist_key_ ^= zobrist_ep_key(old_ep_square) ^ zobrist_ep_key(ep_square_);
+  zobrist_key_ ^= zobrist_side_key();
 }
 
 void Board::set_startpos() {
@@ -143,6 +170,7 @@ bool Board::set_fen(const std::string& fen) {
     const Color c = piece_color(p);
     const PieceType pt = piece_type(p);
     set_piece_bit(pieces_, c, pt, sq, true);
+    mailbox_[square_index(sq)] = p;
     file++;
   }
   if (file != 8 || rank != 0) {
@@ -179,17 +207,7 @@ bool Board::set_fen(const std::string& fen) {
   return true;
 }
 
-Piece Board::piece_on(Square sq) const {
-  const Bitboard mask = bb::square_bb(sq);
-  for (int c = 0; c < 2; ++c) {
-    for (int pt = 0; pt < kNumPieceTypes; ++pt) {
-      if (pieces_[c][pt] & mask) {
-        return make_piece(static_cast<Color>(c), static_cast<PieceType>(pt));
-      }
-    }
-  }
-  return Piece::None;
-}
+Piece Board::piece_on(Square sq) const { return mailbox_[square_index(sq)]; }
 
 bool Board::in_check(Color c) const {
   const Bitboard king_bb = pieces_[static_cast<int>(c)][static_cast<int>(PieceType::King)];
@@ -201,13 +219,7 @@ bool Board::in_check(Color c) const {
 }
 
 void Board::update_occupied(Color c, PieceType pt, Square sq, bool add) {
-  const Bitboard mask = bb::square_bb(sq);
-  if (add) {
-    pieces_[static_cast<int>(c)][static_cast<int>(pt)] |= mask;
-  } else {
-    pieces_[static_cast<int>(c)][static_cast<int>(pt)] &= ~mask;
-  }
-  refresh_derived();
+  set_piece_square(c, pt, sq, add);
 }
 
 void Board::make_move(const Move& move, Undo& undo) {
@@ -220,6 +232,8 @@ void Board::make_move(const Move& move, Undo& undo) {
 
   const Color us = side_;
   const Color them = !us;
+  const std::uint8_t old_castling_rights = castling_rights_;
+  const Square old_ep_square = ep_square_;
   const Bitboard from_mask = bb::square_bb(move.from);
   const Bitboard to_mask = bb::square_bb(move.to);
 
@@ -241,10 +255,10 @@ void Board::make_move(const Move& move, Undo& undo) {
     const Square rook_to =
         king_side ? bb::make_square(5, bb::rank_of(move.from)) : bb::make_square(3, bb::rank_of(move.from));
 
-    set_piece_bit(pieces_, us, PieceType::King, move.from, false);
-    set_piece_bit(pieces_, us, PieceType::King, move.to, true);
-    set_piece_bit(pieces_, us, PieceType::Rook, rook_from, false);
-    set_piece_bit(pieces_, us, PieceType::Rook, rook_to, true);
+    set_piece_square(us, PieceType::King, move.from, false);
+    set_piece_square(us, PieceType::King, move.to, true);
+    set_piece_square(us, PieceType::Rook, rook_from, false);
+    set_piece_square(us, PieceType::Rook, rook_to, true);
     halfmove_clock_++;
   } else {
     if (occupied_ & to_mask) {
@@ -252,18 +266,18 @@ void Board::make_move(const Move& move, Undo& undo) {
         if (pieces_[static_cast<int>(them)][pt] & to_mask) {
           undo.captured_piece = make_piece(them, static_cast<PieceType>(pt));
           undo.captured_bb = to_mask;
-          set_piece_bit(pieces_, them, static_cast<PieceType>(pt), move.to, false);
+          set_piece_square(them, static_cast<PieceType>(pt), move.to, false);
           break;
         }
       }
     }
 
-    set_piece_bit(pieces_, us, moving, move.from, false);
+    set_piece_square(us, moving, move.from, false);
 
     if (move.flag == MoveFlag::EnPassant) {
       const Square cap_sq =
           us == Color::White ? bb::shift_down(move.to) : bb::shift_up(move.to);
-      set_piece_bit(pieces_, them, PieceType::Pawn, cap_sq, false);
+      set_piece_square(them, PieceType::Pawn, cap_sq, false);
       undo.captured_piece = make_piece(them, PieceType::Pawn);
       undo.captured_bb = bb::square_bb(cap_sq);
     }
@@ -272,7 +286,7 @@ void Board::make_move(const Move& move, Undo& undo) {
     if (move.promotion != PieceType::None) {
       place = move.promotion;
     }
-    set_piece_bit(pieces_, us, place, move.to, true);
+    set_piece_square(us, place, move.to, true);
 
     if (moving == PieceType::Pawn) {
       if (move.flag == MoveFlag::DoublePush) {
@@ -317,14 +331,15 @@ void Board::make_move(const Move& move, Undo& undo) {
     fullmove_number_++;
   }
   side_ = them;
-  refresh_derived();
-  refresh_zobrist();
+  update_zobrist_state(old_castling_rights, old_ep_square);
 }
 
 void Board::unmake_move(const Move& move, const Undo& undo) {
   side_ = !side_;
   const Color us = side_;
   const Color them = !us;
+  const std::uint8_t old_castling_rights = castling_rights_;
+  const Square old_ep_square = ep_square_;
 
   if (move.flag == MoveFlag::Castle) {
     const bool king_side = bb::file_of(move.to) > bb::file_of(move.from);
@@ -333,26 +348,26 @@ void Board::unmake_move(const Move& move, const Undo& undo) {
     const Square rook_to =
         king_side ? bb::make_square(5, bb::rank_of(move.from)) : bb::make_square(3, bb::rank_of(move.from));
 
-    set_piece_bit(pieces_, us, PieceType::King, move.to, false);
-    set_piece_bit(pieces_, us, PieceType::King, move.from, true);
-    set_piece_bit(pieces_, us, PieceType::Rook, rook_to, false);
-    set_piece_bit(pieces_, us, PieceType::Rook, rook_from, true);
+    set_piece_square(us, PieceType::King, move.to, false);
+    set_piece_square(us, PieceType::King, move.from, true);
+    set_piece_square(us, PieceType::Rook, rook_to, false);
+    set_piece_square(us, PieceType::Rook, rook_from, true);
   } else {
     const PieceType moving = undo.moved_piece;
     if (move.promotion != PieceType::None) {
-      set_piece_bit(pieces_, us, move.promotion, move.to, false);
+      set_piece_square(us, move.promotion, move.to, false);
     } else {
-      set_piece_bit(pieces_, us, moving, move.to, false);
+      set_piece_square(us, moving, move.to, false);
     }
 
-    set_piece_bit(pieces_, us, moving, move.from, true);
+    set_piece_square(us, moving, move.from, true);
 
     if (move.flag == MoveFlag::EnPassant) {
       const Square cap_sq =
           us == Color::White ? bb::shift_down(move.to) : bb::shift_up(move.to);
-      set_piece_bit(pieces_, them, PieceType::Pawn, cap_sq, true);
+      set_piece_square(them, PieceType::Pawn, cap_sq, true);
     } else if (undo.captured_piece != Piece::None) {
-      set_piece_bit(pieces_, them, piece_type(undo.captured_piece), move.to, true);
+      set_piece_square(them, piece_type(undo.captured_piece), move.to, true);
     }
   }
 
@@ -362,13 +377,15 @@ void Board::unmake_move(const Move& move, const Undo& undo) {
   if (side_ == Color::Black) {
     fullmove_number_--;
   }
-  refresh_derived();
-  refresh_zobrist();
+  update_zobrist_state(old_castling_rights, old_ep_square);
 }
 
 void Board::make_null_move(NullUndo& undo) {
   undo.ep_square = ep_square_;
   undo.halfmove_clock = halfmove_clock_;
+
+  const std::uint8_t old_castling_rights = castling_rights_;
+  const Square old_ep_square = ep_square_;
 
   ep_square_ = Square::None;
   halfmove_clock_++;
@@ -377,17 +394,20 @@ void Board::make_null_move(NullUndo& undo) {
     fullmove_number_++;
   }
   side_ = !side_;
-  refresh_zobrist();
+  update_zobrist_state(old_castling_rights, old_ep_square);
 }
 
 void Board::unmake_null_move(const NullUndo& undo) {
+  const std::uint8_t old_castling_rights = castling_rights_;
+  const Square old_ep_square = ep_square_;
+
   if (side_ == Color::Black) {
     fullmove_number_--;
   }
   side_ = !side_;
   ep_square_ = undo.ep_square;
   halfmove_clock_ = undo.halfmove_clock;
-  refresh_zobrist();
+  update_zobrist_state(old_castling_rights, old_ep_square);
 }
 
 bool Board::is_checkmate() const {

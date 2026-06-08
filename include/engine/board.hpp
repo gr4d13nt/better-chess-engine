@@ -58,10 +58,13 @@ class Board {
  private:
   void clear();
   void refresh_derived();
+  void set_piece_square(Color c, PieceType pt, Square sq, bool on);
+  void update_zobrist_state(std::uint8_t old_castling_rights, Square old_ep_square);
   void update_occupied(Color c, PieceType pt, Square sq, bool add);
 
   std::array<std::array<Bitboard, kNumPieceTypes>, kNumColors> pieces_{};
   std::array<Bitboard, kNumColors> color_bb_{};
+  std::array<Piece, 64> mailbox_{};
   Bitboard occupied_ = 0;
 
   Color side_ = Color::White;
