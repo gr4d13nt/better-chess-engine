@@ -12,6 +12,24 @@
 namespace {
 
 engine::EngineVersion parse_version(int v) {
+  if (v == 30) {
+    return engine::EngineVersion::V30_TimeManagement;
+  }
+  if (v == 29) {
+    return engine::EngineVersion::V29_LazySMP;
+  }
+  if (v == 28) {
+    return engine::EngineVersion::V28_FutilityLmp;
+  }
+  if (v == 27) {
+    return engine::EngineVersion::V27_PVS;
+  }
+  if (v == 26) {
+    return engine::EngineVersion::V26_LMR;
+  }
+  if (v == 25) {
+    return engine::EngineVersion::V25_OpeningBook;
+  }
   if (v == 24) {
     return engine::EngineVersion::V24_HangingPieces;
   }
@@ -82,6 +100,24 @@ engine::EngineVersion parse_version(int v) {
 }
 
 const char* version_name(engine::EngineVersion v) {
+  if (v == engine::EngineVersion::V30_TimeManagement) {
+    return "v30-time";
+  }
+  if (v == engine::EngineVersion::V29_LazySMP) {
+    return "v29-lazy-smp";
+  }
+  if (v == engine::EngineVersion::V28_FutilityLmp) {
+    return "v28-lmp";
+  }
+  if (v == engine::EngineVersion::V27_PVS) {
+    return "v27-pvs";
+  }
+  if (v == engine::EngineVersion::V26_LMR) {
+    return "v26-lmr";
+  }
+  if (v == engine::EngineVersion::V25_OpeningBook) {
+    return "v25-opening-book";
+  }
   if (v == engine::EngineVersion::V24_HangingPieces) {
     return "v24-hanging";
   }

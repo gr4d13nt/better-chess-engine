@@ -1,0 +1,55 @@
+=== Worker 2 start ===
+Running matches: games_per_side=50, depth=8, max_plies=150, movetime_ms=10, fen_or_book=book, version_a=v20, version_b=v29
+
+Batch 1/2: v20 white vs v29 black, 50 games
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/ppp4p/3p2p1/4pp2/8/1P1PPPP1/P1P4P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v20 vs B:v29) FEN=knbrqbnr/p3p1p1/1ppp1p1p/8/5P2/PP2P1P1/2PP3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp4pp/2pp1p2/4p3/2PP4/1P2P3/P4PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp4pp/2p2p2/3pp3/3PP3/2P2P2/PP4PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp4pp/2p5/3ppp2/3P4/2P1P1P1/PP3P1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/1p1p2pp/p1p5/4pp2/3P4/1PP1P3/P4PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=knbrqbnr/ppp4p/5pp1/3pp3/2P5/1P2P1PP/P2P1P2/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p1p2pp1/1p5p/3pp3/3P4/1PP1P3/P4PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p2p3p/1p2p1p1/2p2p2/8/PPPP1P2/4P1PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p5pp/1p1pp3/2p2p2/3P4/1P2P2P/P1P2PP1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=knbrqbnr/p4ppp/1p6/2ppp3/3PP3/1P4P1/P1P2P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=knbrqbnr/pp4p1/2pppp1p/8/3PP3/P5P1/1PP2P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/3p2pp/pp2pp2/2p5/8/P1PPPP2/1P4PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v20 vs B:v29) FEN=knbrqbnr/pp4p1/2pp1p1p/4p3/3PP3/5PP1/PPP4P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v20 vs B:v29) FEN=knbrqbnr/pp4p1/2pp1p1p/4p3/5P2/P1PPP3/1P4PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp4p1/4p2p/2pp1p2/2P1PP2/1P1P4/P5PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v20 vs B:v29) FEN=knbrqbnr/p4p1p/1p1p2p1/2p1p3/3P1P2/2P1P1P1/PP5P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p4p1p/1p1pp1p1/2p5/4P3/PPPP4/5PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v20 vs B:v29) FEN=knbrqbnr/pp2p1p1/7p/2pp1p2/4P3/2P2P1P/PP1P2P1/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=knbrqbnr/2p3pp/pp1p4/4pp2/8/1PPPPP2/P5PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/3p1ppp/pp6/2p1p3/2P5/3PPPP1/PP5P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp4pp/2pp1p2/4p3/8/2PPP1PP/PP3P2/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p2p3p/1p2ppp1/2p5/2P5/PP1PP3/5PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp3p2/4p1pp/2pp4/3P4/P1P3P1/1P2PP1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/1p4pp/p1pppp2/8/2P1P3/3P1P1P/PP4P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/1p3p1p/p3p1p1/2pp4/5P2/1P1PP2P/P1P3P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v20 vs B:v29) FEN=knbrqbnr/1p3ppp/p1p5/3pp3/4P3/3P1PP1/PPP4P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=knbrqbnr/1p2pp1p/p1p3p1/3p4/5P2/1PP1P1P1/P2P3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p5pp/1p1pp3/2p2p2/4P3/1PPP3P/P4PP1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/ppp4p/3p2p1/4pp2/2PPP3/1P6/P4PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/1pp4p/p3ppp1/3p4/2P5/3PPP1P/PP4P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/3p2pp/ppp1p3/5p2/3P1P2/PP6/2P1P1PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p5pp/1p1pp3/2p2p2/8/1PPPP1P1/P4P1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=knbrqbnr/pp3p2/3p2pp/2p1p3/8/1PPPPP2/P5PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp5p/4ppp1/2pp4/2P5/3PP1PP/PP3P2/KNBRQBNR\ w\ -\ c6\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp4p1/4p2p/2pp1p2/2P2P2/1P1P2P1/P3P2P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp1p3p/2p3p1/4pp2/2P5/PP1PP3/5PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=knbrqbnr/pp3p2/2pp2pp/4p3/3P4/2P1P1PP/PP3P2/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/1p1p2pp/p4p2/2p1p3/4P3/2PP1PP1/PP5P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp4pp/2pp1p2/4p3/8/2PPP1PP/PP3P2/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=knbrqbnr/1p4pp/p2p4/2p1pp2/2P1P3/3P2P1/PP3P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p2p2pp/1pp2p2/4p3/5P2/1P1PP2P/P1P3P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p2p1pp1/1pp4p/4p3/5P2/PP1PP3/2P3PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp1p4/2p1p1pp/5p2/8/PPPP2P1/4PP1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p2p2pp/1pp2p2/4p3/8/2PPPPP1/PP5P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=knbrqbnr/pp2p2p/5pp1/2pp4/5P2/1P1PP2P/P1P3P1/RNBQRBNK\ w\ -\ c6\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/p2p2pp/1p3p2/2p1p3/3P4/P1P3P1/1P2PP1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/2p2p1p/pp2p1p1/3p4/8/1PPPPP2/P5PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/3p2pp/pp2p3/2p2p2/2P1PP2/1P1P4/P5PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v20 vs B:v29) FEN=rnbqrbnk/pp1p2p1/5p1p/2p1p3/2P5/1P1P1P1P/P3P1P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+/Users/alanxie/Projects/Chess Engine/scripts/run_matches.sh: line 184: unexpected EOF while looking for matching `"'

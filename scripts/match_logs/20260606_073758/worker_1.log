@@ -1,0 +1,22 @@
+=== Worker 1 start ===
+Running matches: games_per_side=5, depth=8, max_plies=150, movetime_ms=10, fen_or_book=startpos, version_a=v25, version_b=v26
+
+Batch 1/2: v25 white vs v26 black, 5 games
+Game (W:v25 vs B:v26) FEN=startpos -> result 1-0 checkmate
+Game (W:v25 vs B:v26) FEN=startpos -> result 1-0 checkmate
+Game (W:v25 vs B:v26) FEN=startpos -> result 1-0 checkmate
+Game (W:v25 vs B:v26) FEN=startpos -> result 1-0 checkmate
+Game (W:v25 vs B:v26) FEN=startpos -> result 1-0 checkmate
+Batch 2/2: v26 white vs v25 black, 5 games
+Game (W:v26 vs B:v25) FEN=startpos -> result 0-1 checkmate
+Game (W:v26 vs B:v25) FEN=startpos -> result 0-1 checkmate
+Game (W:v26 vs B:v25) FEN=startpos -> result 0-1 checkmate
+Game (W:v26 vs B:v25) FEN=startpos -> result 0-1 checkmate
+Game (W:v26 vs B:v25) FEN=startpos -> result 0-1 checkmate
+
+=== Match Summary ===
+Total games: 10
+v25 wins: 10
+v26 wins: 0
+draws:   0
+=== Worker 1 end ===

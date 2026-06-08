@@ -1,0 +1,20 @@
+=== Worker 7 start ===
+Running matches: games_per_side=4, depth=8, max_plies=150, movetime_ms=200, fen_or_book=book, version_a=v29, version_b=v30
+
+Batch 1/2: v29 white vs v30 black, 4 games
+Game (W:v29 vs B:v30) FEN=knbrqbnr/p3p2p/1p1p2p1/2p2p2/4P3/1P4PP/P1PP1P2/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v29 vs B:v30) FEN=knbrqbnr/p4pp1/1ppp3p/4p3/3P1P2/1P2P2P/P1P3P1/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v29 vs B:v30) FEN=knbrqbnr/2p2ppp/pp2p3/3p4/8/1PP1P1PP/P2P1P2/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v29 vs B:v30) FEN=knbrqbnr/p4p1p/1p1p2p1/2p1p3/4P3/5PPP/PPPP4/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Batch 2/2: v30 white vs v29 black, 4 games
+Game (W:v30 vs B:v29) FEN=rnbqrbnk/3p2pp/pp2pp2/2p5/2P2P2/3PP1P1/PP5P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v30 vs B:v29) FEN=rnbqrbnk/p2p2p1/1p2pp1p/2p5/4P3/P1PP1P2/1P4PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v30 vs B:v29) FEN=knbrqbnr/1p4pp/p1pp4/4pp2/3P4/1PP1PP2/P5PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v30 vs B:v29) FEN=knbrqbnr/p3pp2/1ppp2pp/8/5P2/1P2P1PP/P1PP4/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+
+=== Match Summary ===
+Total games: 8
+v29 wins: 3
+v30 wins: 3
+draws:   2
+=== Worker 7 end ===

@@ -1,0 +1,22 @@
+=== Worker 1 start ===
+Running matches: games_per_side=5, depth=8, max_plies=150, movetime_ms=10, fen_or_book=book, version_a=v24, version_b=v25
+
+Batch 1/2: v24 white vs v25 black, 5 games
+Game (W:v24 vs B:v25) FEN=knbrqbnr/2p2p1p/pp1pp1p1/8/8/1PP1PPP1/P2P3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v24 vs B:v25) FEN=knbrqbnr/5ppp/pppp4/4p3/2P2P2/4P1PP/PP1P4/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v24 vs B:v25) FEN=knbrqbnr/2p1p1pp/pp3p2/3p4/8/1PP1PP1P/P2P2P1/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v24 vs B:v25) FEN=knbrqbnr/pp2pp2/6pp/2pp4/8/1PP1PPP1/P2P3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v24 vs B:v25) FEN=knbrqbnr/2p3pp/pp1pp3/5p2/5P2/P1PPP3/1P4PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Batch 2/2: v25 white vs v24 black, 5 games
+Game (W:v25 vs B:v24) FEN=rnbqrbnk/1pp3pp/p2p1p2/4p3/3P1P2/PP6/2P1P1PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v24) FEN=rnbqrbnk/p1p3pp/1p1p4/4pp2/2P5/1P1PP1P1/P4P1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v25 vs B:v24) FEN=rnbqrbnk/p5pp/1pp1p3/3p1p2/3P4/1P2P2P/P1P2PP1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v25 vs B:v24) FEN=rnbqrbnk/p1p2p2/1p1pp1pp/8/8/PPPP2P1/4PP1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v24) FEN=rnbqrbnk/5ppp/pp2p3/2pp4/2PP1P2/4P3/PP4PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+
+=== Match Summary ===
+Total games: 10
+v24 wins: 5
+v25 wins: 1
+draws:   4
+=== Worker 1 end ===

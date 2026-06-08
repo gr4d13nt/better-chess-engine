@@ -11,6 +11,7 @@ namespace engine::search_common {
 namespace {
 
 constexpr int kHashMoveScore = 2'000'000;
+constexpr int kCheckMoveScore = 950'000;
 constexpr int kKiller0Score = 900'000;
 constexpr int kKiller1Score = 800'000;
 constexpr int kMaxCheckExtensions = 1;
@@ -61,6 +62,31 @@ int count_non_pawns(const Board& board, Color c) {
 
 bool has_null_move_material(const Board& board) {
   return count_non_pawns(board, board.side_to_move()) >= kNullMinNonPawns;
+}
+
+bool gives_check(const Board& board, const Move& move) {
+  Board copy = board;
+  Undo undo;
+  copy.make_move(move, undo);
+  return copy.in_check(!board.side_to_move());
+}
+
+bool has_checking_move(const Board& board) {
+  MoveList list;
+  generate_legal_moves(board, list);
+  for (int i = 0; i < list.count; ++i) {
+    if (gives_check(board, list.moves[i])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool opponent_has_checking_move(const Board& board) {
+  Board copy = board;
+  NullUndo undo;
+  copy.make_null_move(undo);
+  return has_checking_move(copy);
 }
 
 int null_reduction(int depth) {
@@ -140,6 +166,9 @@ int move_score(const Board& board, const Move& m, const Move* hash_move, const S
     score += 100000 + (10 * kPieceValues[static_cast<int>(PieceType::Pawn)]) -
              kPieceValues[static_cast<int>(moving_type)];
   } else {
+    if (gives_check(board, m)) {
+      score += kCheckMoveScore;
+    }
     if (ply >= 0 && ply < kMaxSearchDepth) {
       if (moves_equal(m, st.killers[ply][0])) {
         score += kKiller0Score;
@@ -285,7 +314,8 @@ bool negamax_v19_tt_impl(Board& board, int depth, int alpha, int beta, SearchSta
   }
 
   if (allow_null && depth >= kNullMinDepth && extensions == 0 &&
-      !board.in_check(board.side_to_move()) && has_null_move_material(board)) {
+      !board.in_check(board.side_to_move()) && has_null_move_material(board) &&
+      !has_checking_move(board) && !opponent_has_checking_move(board)) {
     const int R = null_reduction(depth);
     const int null_depth = depth - R;
     if (null_depth >= 1) {
@@ -320,8 +350,8 @@ bool negamax_v19_tt_impl(Board& board, int depth, int alpha, int beta, SearchSta
 
     int child_depth = depth - 1;
     int child_extensions = extensions;
-    const bool gives_check = board.in_check(board.side_to_move());
-    if (gives_check && extensions < kMaxCheckExtensions) {
+    const bool move_gives_check = board.in_check(board.side_to_move());
+    if (move_gives_check && extensions < kMaxCheckExtensions) {
       child_depth = depth;
       child_extensions = extensions + 1;
     }

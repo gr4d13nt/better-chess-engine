@@ -1,0 +1,52 @@
+=== Worker 2 start ===
+Running matches: games_per_side=20, depth=8, max_plies=150, movetime_ms=10, fen_or_book=book, version_a=v25, version_b=v26
+
+Batch 1/2: v25 white vs v26 black, 20 games
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/p5pp/1pppp3/5p2/5P2/1PPP2P1/P3P2P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/3p2pp/pp2pp2/2p5/2PP4/P4P2/1P2P1PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v25 vs B:v26) FEN=knbrqbnr/pp4pp/2p5/3ppp2/2P1P3/1P4P1/P2P1P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v26) FEN=knbrqbnr/ppp4p/4ppp1/3p4/3P4/2P1PP1P/PP4P1/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/1pp3pp/p2p4/4pp2/4P3/PP1P2P1/2P2P1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/pp4pp/2p5/3ppp2/3P4/P1P3P1/1P2PP1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v25 vs B:v26) FEN=knbrqbnr/ppp5/3pp1pp/5p2/2P1P3/6PP/PP1P1P2/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/2p2p1p/pp1pp1p1/8/2P5/1P1PP2P/P4PP1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v25 vs B:v26) FEN=knbrqbnr/pp4p1/2pppp1p/8/8/P1P1PPP1/1P1P3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/pp4p1/3pp2p/2p2p2/3P4/1PP4P/P3PPP1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v26) FEN=knbrqbnr/1pp3pp/p3p3/3p1p2/3P1P2/PP2P3/2P3PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/1pp3pp/p2p1p2/4p3/3P1P2/PP6/2P1P1PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/1p4pp/p2ppp2/2p5/5P2/2PPP2P/PP4P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/1p1p2pp/p1p5/4pp2/2PP4/1P3P2/P3P1PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/p2p2pp/1pp2p2/4p3/5P2/1P1PP2P/P1P3P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/pp1p3p/2p2pp1/4p3/5P2/1P1PP2P/P1P3P1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v25 vs B:v26) FEN=knbrqbnr/pp4p1/3p1p1p/2p1p3/3P1P2/P3P1P1/1PP4P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/p5pp/1p2pp2/2pp4/3PP3/P4P2/1PP3PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v26) FEN=knbrqbnr/p3pp2/1ppp2pp/8/5P2/1P2P1PP/P1PP4/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v25 vs B:v26) FEN=rnbqrbnk/p1p3p1/1p2p2p/3p1p2/8/PP1PPP2/2P3PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Batch 2/2: v26 white vs v25 black, 20 games
+Game (W:v26 vs B:v25) FEN=rnbqrbnk/1p4pp/p3p3/2pp1p2/4P3/2PP1PP1/PP5P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v26 vs B:v25) FEN=knbrqbnr/2p2ppp/pp2p3/3p4/8/PP1PP1P1/2P2P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v26 vs B:v25) FEN=rnbqrbnk/2p3pp/pp1ppp2/8/4P3/1PPP2P1/P4P1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v26 vs B:v25) FEN=knbrqbnr/pp4p1/3pp2p/2p2p2/3P4/1P2PPP1/P1P4P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v26 vs B:v25) FEN=knbrqbnr/p4pp1/1p1p3p/2p1p3/8/PPP1P1P1/3P1P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v26 vs B:v25) FEN=rnbqrbnk/pp5p/2p1ppp1/3p4/5P2/P1PPP3/1P4PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v26 vs B:v25) FEN=rnbqrbnk/pp5p/2ppppp1/8/2P1P3/PP1P4/5PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v26 vs B:v25) FEN=rnbqrbnk/1p3ppp/p1pp4/4p3/3P4/1PP4P/P3PPP1/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v26 vs B:v25) FEN=knbrqbnr/p1p1p1p1/1p5p/3p1p2/2P5/4PPPP/PP1P4/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v26 vs B:v25) FEN=rnbqrbnk/ppp3p1/3p1p1p/4p3/2P5/1P1P1PP1/P3P2P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v26 vs B:v25) FEN=knbrqbnr/1p4pp/p1pppp2/8/8/2PPPP1P/PP4P1/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v26 vs B:v25) FEN=knbrqbnr/pp4p1/2pppp1p/8/3PP3/P5P1/1PP2P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v26 vs B:v25) FEN=knbrqbnr/1p3p1p/p2p2p1/2p1p3/3P1P2/1PP1P3/P5PP/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 max-plies
+Game (W:v26 vs B:v25) FEN=rnbqrbnk/p5pp/1p2p3/2pp1p2/8/2PP1PPP/PP2P3/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v26 vs B:v25) FEN=knbrqbnr/p1p4p/1p1pp1p1/5p2/8/3PPPPP/PPP5/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v26 vs B:v25) FEN=knbrqbnr/p1p1p2p/1p4p1/3p1p2/5P2/P1P1P1P1/1P1P3P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v26 vs B:v25) FEN=rnbqrbnk/pp3pp1/7p/2ppp3/3P4/1P2PP2/P1P3PP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v26 vs B:v25) FEN=knbrqbnr/pp4p1/2ppp2p/5p2/2P1PP2/7P/PP1P2P1/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v26 vs B:v25) FEN=rnbqrbnk/1p3ppp/p2p4/2p1p3/3P4/1PP1P3/P4PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v26 vs B:v25) FEN=rnbqrbnk/ppp3p1/5p1p/3pp3/8/P1PPP1P1/1P3P1P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+
+=== Match Summary ===
+Total games: 40
+v25 wins: 10
+v26 wins: 18
+draws:   12
+=== Worker 2 end ===

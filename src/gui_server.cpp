@@ -21,6 +21,18 @@ namespace {
 
 std::optional<engine::EngineVersion> parse_version(int v) {
   switch (v) {
+    case 30:
+      return engine::EngineVersion::V30_TimeManagement;
+    case 29:
+      return engine::EngineVersion::V29_LazySMP;
+    case 28:
+      return engine::EngineVersion::V28_FutilityLmp;
+    case 27:
+      return engine::EngineVersion::V27_PVS;
+    case 26:
+      return engine::EngineVersion::V26_LMR;
+    case 25:
+      return engine::EngineVersion::V25_OpeningBook;
     case 24:
       return engine::EngineVersion::V24_HangingPieces;
     case 23:
@@ -211,6 +223,7 @@ std::string handle_search(const std::string& body) {
   cfg.version = *version;
   cfg.repetition_history = engine::repetition_hashes_from_fens(json_string_array(body, "repetition_fens"));
   cfg.clear_transposition_table = json_bool_token(body, "clear_tt", false);
+  cfg.use_opening_book = json_bool_token(body, "use_book", true);
 
   const engine::SearchResult result = engine::search_best_move(board, cfg);
   if (!result.has_move) {
@@ -253,7 +266,7 @@ int main(int argc, char** argv) {
   });
 
   server.Get("/api/health", [](const httplib::Request&, httplib::Response& res) {
-    res.set_content(R"({"ok":true,"max_version":21})", "application/json");
+    res.set_content(R"({"ok":true,"max_version":28})", "application/json");
   });
 
   std::cout << "Chess engine web UI\n";

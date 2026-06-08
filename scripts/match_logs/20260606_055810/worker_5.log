@@ -1,0 +1,4 @@
+=== Worker 5 start ===
+Running matches: games_per_side=50, depth=8, max_plies=150, movetime_ms=10, fen_or_book=book, version_a=v25, version_b=v26
+
+Batch 1/2: v25 white vs v26 black, 50 games

@@ -13,8 +13,11 @@ add_library(engine STATIC
   src/repetition.cpp
   src/see.cpp
   src/zobrist.cpp
+  src/book.cpp
+  src/polyglot.cpp
   src/search/search_common.cpp
   src/search/search_dispatch.cpp
+  src/search/search_lazy_smp.cpp
   src/search/search_tt.cpp
   src/search/search_v1_no_pruning.cpp
   src/search/search_v2_alpha_beta.cpp
@@ -33,6 +36,9 @@ add_library(engine STATIC
   src/search/search_v22_tt.cpp
   src/search/search_v23_tt.cpp
   src/search/search_v24_tt.cpp
+  src/search/search_v26_tt.cpp
+  src/search/search_v27_tt.cpp
+  src/search/search_v28_tt.cpp
   src/search/search_ordering.cpp
   src/search/search_eval_phase.cpp
   src/search/search_eval_layered.cpp
@@ -58,6 +64,9 @@ add_library(engine STATIC
 target_include_directories(engine PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/src/search
+)
+target_compile_definitions(engine PRIVATE
+  OPENING_BOOK_PATH="${CMAKE_CURRENT_SOURCE_DIR}/data/opening_book.bin"
 )
 
 if(MSVC)
@@ -124,6 +133,14 @@ add_test(NAME eval_v23 COMMAND eval_v23_tests)
 add_executable(eval_v24_tests tests/eval_v24_tests.cpp)
 target_link_libraries(eval_v24_tests PRIVATE engine)
 add_test(NAME eval_v24 COMMAND eval_v24_tests)
+
+add_executable(book_tests tests/book_tests.cpp)
+target_link_libraries(book_tests PRIVATE engine)
+add_test(NAME book COMMAND book_tests)
+
+add_executable(tactical_fen_tests tests/tactical_fen_tests.cpp)
+target_link_libraries(tactical_fen_tests PRIVATE engine)
+add_test(NAME tactical_fen COMMAND tactical_fen_tests)
 
 add_executable(see_tests tests/see_tests.cpp)
 target_link_libraries(see_tests PRIVATE engine)

@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
 
   std::string fen = "startpos";
   // Usage:
-  //   ./search_main <depth> [fen] [version] [movetime_ms]
+  //   ./search_main <depth> [fen] [version] [movetime_ms] [num_threads]
   if (argc > 1) {
     cfg.depth = std::stoi(argv[1]);
   }
@@ -23,7 +23,19 @@ int main(int argc, char** argv) {
   }
   if (argc > 3) {
     const int version = std::stoi(argv[3]);
-    if (version == 24) {
+    if (version == 30) {
+      cfg.version = engine::EngineVersion::V30_TimeManagement;
+    } else if (version == 29) {
+      cfg.version = engine::EngineVersion::V29_LazySMP;
+    } else if (version == 28) {
+      cfg.version = engine::EngineVersion::V28_FutilityLmp;
+    } else if (version == 27) {
+      cfg.version = engine::EngineVersion::V27_PVS;
+    } else if (version == 26) {
+      cfg.version = engine::EngineVersion::V26_LMR;
+    } else if (version == 25) {
+      cfg.version = engine::EngineVersion::V25_OpeningBook;
+    } else if (version == 24) {
       cfg.version = engine::EngineVersion::V24_HangingPieces;
     } else if (version == 23) {
       cfg.version = engine::EngineVersion::V23_Space;
@@ -76,6 +88,9 @@ int main(int argc, char** argv) {
   if (argc > 4) {
     cfg.movetime_ms = std::stoi(argv[4]);
   }
+  if (argc > 5) {
+    cfg.num_threads = std::stoi(argv[5]);
+  }
 
   if (fen == "startpos") {
     board.set_startpos();
@@ -95,5 +110,8 @@ int main(int argc, char** argv) {
   std::cout << "movetime_ms " << cfg.movetime_ms << '\n';
   std::cout << "score " << result.score << '\n';
   std::cout << "nodes " << result.nodes << '\n';
+  if (result.depth_reached > 0) {
+    std::cout << "depth_reached " << result.depth_reached << '\n';
+  }
   return 0;
 }

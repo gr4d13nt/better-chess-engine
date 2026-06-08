@@ -51,7 +51,12 @@ bool TranspositionTable::probe(std::uint64_t key, int depth, int alpha, int beta
 
   switch (entry.bound) {
     case TTBound::Exact:
-      return true;
+      // Exact scores are only usable as cutoffs on full windows. On null-window (PVS) searches
+      // (beta == alpha + 1), an in-window exact would skip the verification re-search.
+      if (beta - alpha > 1) {
+        return true;
+      }
+      return false;
     case TTBound::Lower:
       return out_score >= beta;
     case TTBound::Upper:

@@ -6,6 +6,7 @@
 
 #include "search_tt.hpp"
 
+#include <atomic>
 #include <chrono>
 #include <cstdint>
 #include <vector>
@@ -19,11 +20,14 @@ constexpr int kMaxSearchDepth = 64;
 struct SearchState {
   int nodes = 0;
   bool use_time = false;
+  bool use_time_management = false;
   std::chrono::steady_clock::time_point deadline{};
+  std::chrono::steady_clock::time_point hard_deadline{};
   bool stopped = false;
   EngineVersion eval_profile = EngineVersion::V1_NoPruning;
   TranspositionTable* tt = nullptr;
   std::uint8_t tt_generation = 0;
+  std::atomic<bool>* shared_stop = nullptr;
   // Game history + positions on the current search path (v14 repetition).
   std::vector<std::uint64_t> repetition{};
   // v19: killer moves (2 per ply) and quiet-move history [color][from][to].
@@ -86,6 +90,12 @@ bool negamax_v22_tt(Board& board, int depth, int alpha, int beta, SearchState& s
 bool negamax_v23_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 
 bool negamax_v24_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v26_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v27_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
+
+bool negamax_v28_tt(Board& board, int depth, int alpha, int beta, SearchState& st, int& out_score);
 
 void prioritize_move(MoveList& moves, const Move& prefer);
 

@@ -177,6 +177,10 @@ void accumulate_improved_side(const Board& board, Color c, int& mg, int& eg) {
 }  // namespace
 
 bool should_stop(SearchState& st) {
+  if (st.shared_stop != nullptr && st.shared_stop->load(std::memory_order_relaxed)) {
+    st.stopped = true;
+    return true;
+  }
   if (!st.use_time) {
     return false;
   }
@@ -184,8 +188,20 @@ bool should_stop(SearchState& st) {
   if ((st.nodes & 2047) != 0) {
     return false;
   }
-  if (std::chrono::steady_clock::now() >= st.deadline) {
+  const auto now = std::chrono::steady_clock::now();
+  if (st.use_time_management && now >= st.hard_deadline) {
     st.stopped = true;
+    if (st.shared_stop != nullptr) {
+      st.shared_stop->store(true, std::memory_order_relaxed);
+    }
+    return true;
+  }
+  if (now >= st.deadline) {
+    st.stopped = true;
+    // v29: single hard deadline. v30: soft per-depth stop stays thread-local.
+    if (!st.use_time_management && st.shared_stop != nullptr) {
+      st.shared_stop->store(true, std::memory_order_relaxed);
+    }
     return true;
   }
   return false;
@@ -241,7 +257,13 @@ void evaluate_improved_split(const Board& board, int& mg_white, int& eg_white, i
 
 int evaluate_for_side_to_move(const Board& board, EngineVersion eval_profile) {
   int white_eval = 0;
-  if (eval_profile == EngineVersion::V24_HangingPieces) {
+  if (eval_profile == EngineVersion::V24_HangingPieces ||
+      eval_profile == EngineVersion::V25_OpeningBook ||
+      eval_profile == EngineVersion::V26_LMR ||
+      eval_profile == EngineVersion::V27_PVS ||
+      eval_profile == EngineVersion::V28_FutilityLmp ||
+      eval_profile == EngineVersion::V29_LazySMP ||
+      eval_profile == EngineVersion::V30_TimeManagement) {
     white_eval = evaluate_v24(board);
   } else if (eval_profile == EngineVersion::V23_Space) {
     white_eval = evaluate_v23(board);

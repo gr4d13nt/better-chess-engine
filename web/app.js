@@ -1,4 +1,10 @@
 const VERSIONS = [
+  { id: 30, label: "v30 time mgmt" },
+  { id: 29, label: "v29 lazy SMP" },
+  { id: 28, label: "v28 LMP" },
+  { id: 27, label: "v27 PVS" },
+  { id: 26, label: "v26 LMR" },
+  { id: 25, label: "v25 opening book" },
   { id: 24, label: "v24 hanging pieces" },
   { id: 23, label: "v23 space" },
   { id: 22, label: "v22 extended pawn" },
@@ -26,6 +32,7 @@ let board = null;
 let boardOrientation = "white";
 let autoPlayTimer = null;
 let engineBusy = false;
+let engineStepPending = false;
 let pendingPromotion = null;
 let selectedSquare = null;
 
@@ -282,6 +289,7 @@ function searchConfig(side) {
     depth: Number(depthEl.value),
     movetime_ms: Number(movetimeEl.value),
     version: Number(side === "w" ? whiteVersionEl.value : blackVersionEl.value),
+    use_book: true,
   };
   if (clearTtOnNextSearch) {
     config.clear_tt = true;
@@ -475,6 +483,31 @@ function tryMove(source, target) {
   return true;
 }
 
+function requestNextEngineMove() {
+  if (currentMode() !== "engine") {
+    return false;
+  }
+
+  if (!isLivePosition()) {
+    stepHistory(1);
+    return true;
+  }
+
+  if (game.game_over() || !isEngineTurn()) {
+    return true;
+  }
+
+  stopAutoPlay();
+  engineStepPending = true;
+  if (!engineBusy) {
+    void applyEngineMove();
+  } else {
+    const side = game.turn();
+    setStatus(`Searching (${side === "w" ? "White" : "Black"})... → plays when ready`);
+  }
+  return true;
+}
+
 async function applyEngineMove() {
   if (!isLivePosition() || engineBusy || game.game_over() || !isEngineTurn()) {
     return;
@@ -526,6 +559,7 @@ async function applyEngineMove() {
     stopAutoPlay();
   } finally {
     engineBusy = false;
+    engineStepPending = false;
     document.getElementById("engine-move").disabled = !isEngineTurn() || !isLivePosition();
   }
 }
@@ -676,7 +710,9 @@ function onKeyDown(event) {
     stepHistory(-1);
   } else if (event.key === "ArrowRight") {
     event.preventDefault();
-    stepHistory(1);
+    if (!requestNextEngineMove()) {
+      stepHistory(1);
+    }
   }
 }
 

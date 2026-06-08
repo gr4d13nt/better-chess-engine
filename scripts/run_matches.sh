@@ -45,6 +45,12 @@ set -euo pipefail
 #   v22 = v20 search + v22 eval (v21 pawn/king split + backward/islands/candidates)
 #   v23 = v20 search + v23 eval (v22 + central pawn space)
 #   v24 = v20 search + v24 eval (v23 + hanging/loose pieces)
+#   v25 = v24 search/eval + Polyglot opening book (data/opening_book.bin; scripts/fetch_opening_book.sh)
+#   v26 = v25 search/eval + late-move reductions (LMR) in main search
+#   v27 = v26 search/eval + principal-variation search (PVS / null-window)
+#   v28 = v27 search/eval + late-move pruning (LMP) at depth 2–3
+#   v29 = v28 search/eval + lazy SMP (timed search only, multi-thread)
+#   v30 = v29 search/eval + time management (soft stop + depth budget)
 
 GAMES_PER_SIDE="${1:-2}"
 DEPTH="${2:-3}"
@@ -82,49 +88,61 @@ if [[ ! -x "${BIN}" ]]; then
   cmake --build "${ROOT_DIR}/build"
 fi
 
+OPENINGS=()
+if [[ "${FEN_OR_BOOK}" == "book" ]]; then
+  if [[ ! -f "${OPENINGS_FILE}" ]]; then
+    echo "ERROR: openings file not found: ${OPENINGS_FILE}" >&2
+    exit 1
+  fi
+  while IFS= read -r line; do
+    OPENINGS+=("${line}")
+  done < <(awk 'NF && $1 !~ /^#/' "${OPENINGS_FILE}")
+  if [[ ${#OPENINGS[@]} -eq 0 ]]; then
+    echo "ERROR: openings file has no usable FENs: ${OPENINGS_FILE}" >&2
+    exit 1
+  fi
+fi
+
 version_a_wins=0
 version_b_wins=0
 draws=0
 
 pick_opening_fen() {
   if [[ "${FEN_OR_BOOK}" != "book" ]]; then
-    printf "%s\n" "${FEN_OR_BOOK}"
+    printf '%s\n' "${FEN_OR_BOOK}"
     return
   fi
-
-  if [[ ! -f "${OPENINGS_FILE}" ]]; then
-    echo "ERROR: openings file not found: ${OPENINGS_FILE}" >&2
-    exit 1
-  fi
-
-  local openings=()
-  while IFS= read -r line; do
-    openings+=("${line}")
-  done < <(awk 'NF && $1 !~ /^#/' "${OPENINGS_FILE}")
-  if [[ ${#openings[@]} -eq 0 ]]; then
-    echo "ERROR: openings file has no usable FENs: ${OPENINGS_FILE}" >&2
-    exit 1
-  fi
-  local idx=$((RANDOM % ${#openings[@]}))
-  printf "%s\n" "${openings[idx]}"
+  local idx=$((RANDOM % ${#OPENINGS[@]}))
+  printf '%s\n' "${OPENINGS[${idx}]}"
 }
 
 run_game() {
   local white_version="$1"
   local black_version="$2"
-  local game_fen
-  game_fen="$(pick_opening_fen)"
+  local game_fen out_file rc result_line result
 
-  local out
-  out="$("${BIN}" "${white_version}" "${black_version}" "${DEPTH}" "${MAX_PLIES}" "${MOVETIME_MS}" "${game_fen}")"
-  local result_line
-  result_line="$(printf "%s\n" "${out}" | awk '/^result /{print $0}' | tail -1)"
-  local result
-  result="$(printf "%s\n" "${result_line}" | awk '{print $2}')"
+  game_fen="$(pick_opening_fen)"
+  out_file="$(mktemp "${TMPDIR:-/tmp}/run_game.XXXXXX")"
+
+  set +e
+  "${BIN}" "${white_version}" "${black_version}" "${DEPTH}" "${MAX_PLIES}" "${MOVETIME_MS}" \
+    "${game_fen}" >"${out_file}" 2>&1
+  rc=$?
+  set -e
+
+  if [[ "${rc}" -ne 0 ]]; then
+    echo "ERROR: selfplay exited ${rc} (W:v${white_version} vs B:v${black_version})." >&2
+    cat "${out_file}" >&2
+    rm -f "${out_file}"
+    exit 1
+  fi
+
+  result_line="$(awk '/^result /{line=$0} END{print line}' "${out_file}")"
+  result="$(awk '/^result /{print $2; exit}' "${out_file}")"
+  rm -f "${out_file}"
 
   if [[ -z "${result}" ]]; then
-    echo "ERROR: could not parse result."
-    printf "%s\n" "${out}"
+    echo "ERROR: could not parse result." >&2
     exit 1
   fi
 
@@ -144,7 +162,6 @@ run_game() {
     draws=$((draws + 1))
   fi
 
-  # %q safely escapes FEN for display (no fragile single-quote wrapping).
   printf 'Game (W:v%s vs B:v%s) FEN=%q -> %s\n' \
     "${white_version}" "${black_version}" "${game_fen}" "${result_line}"
 }
@@ -169,9 +186,8 @@ echo "Batch 2/2: v${VERSION_B} white vs v${VERSION_A} black, ${GAMES_PER_SIDE} g
 run_games_for_side "${VERSION_B}" "${VERSION_A}"
 
 total_games=$((2 * GAMES_PER_SIDE))
-echo ""
-echo "=== Match Summary ==="
-echo "Total games: ${total_games}"
-echo "v${VERSION_A} wins: ${version_a_wins}"
-echo "v${VERSION_B} wins: ${version_b_wins}"
-echo "draws:   ${draws}"
+printf '\n=== Match Summary ===\n'
+printf 'Total games: %s\n' "${total_games}"
+printf 'v%s wins: %s\n' "${VERSION_A}" "${version_a_wins}"
+printf 'v%s wins: %s\n' "${VERSION_B}" "${version_b_wins}"
+printf 'draws:   %s\n' "${draws}"
