@@ -43,13 +43,13 @@ enum class EngineVersion : int {
   V27_PVS = 27,
   V28_FutilityLmp = 28,
   V29_LazySMP = 29,
-  V30_TimeManagement = 30,
+  V30_FutilityPruning = 30,
 };
 
 inline bool version_uses_opening_book(EngineVersion v) {
   return v == EngineVersion::V25_OpeningBook || v == EngineVersion::V26_LMR ||
          v == EngineVersion::V27_PVS || v == EngineVersion::V28_FutilityLmp ||
-         v == EngineVersion::V29_LazySMP || v == EngineVersion::V30_TimeManagement;
+         v == EngineVersion::V29_LazySMP || v == EngineVersion::V30_FutilityPruning;
 }
 
 struct SearchConfig {
@@ -57,7 +57,7 @@ struct SearchConfig {
   EngineVersion version = EngineVersion::V1_NoPruning;
   // Per-move search budget in milliseconds. 0 means depth-only.
   int movetime_ms = 0;
-  // v29 lazy SMP: worker count. 0 means hardware_concurrency() when movetime_ms > 0.
+  // v29/v30 lazy SMP: worker count. 0 means hardware_concurrency() when movetime_ms > 0.
   int num_threads = 0;
   // Game position hashes from the start through the current root (for v14 repetition).
   std::vector<std::uint64_t> repetition_history{};

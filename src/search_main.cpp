@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
   if (argc > 3) {
     const int version = std::stoi(argv[3]);
     if (version == 30) {
-      cfg.version = engine::EngineVersion::V30_TimeManagement;
+      cfg.version = engine::EngineVersion::V30_FutilityPruning;
     } else if (version == 29) {
       cfg.version = engine::EngineVersion::V29_LazySMP;
     } else if (version == 28) {

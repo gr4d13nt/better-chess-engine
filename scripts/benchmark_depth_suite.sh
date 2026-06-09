@@ -20,7 +20,7 @@ set -euo pipefail
 #   positions_file    = scripts/equal_openings.txt  (1024 balanced midgame FENs)
 #   max_positions     = 64 (random sample without replacement)
 #   min_version       = 2
-#   max_version       = 28
+#   max_version       = 30
 #   baseline_version  = 19
 #
 # Set BENCHMARK_SUITE_SEED to fix the random sample (e.g. BENCHMARK_SUITE_SEED=7).
@@ -35,7 +35,7 @@ DEPTH="${1:-5}"
 POSITIONS_FILE="${2:-}"
 MAX_POSITIONS="${3:-64}"
 MIN_VERSION="${4:-2}"
-MAX_VERSION="${5:-28}"
+MAX_VERSION="${5:-30}"
 BASELINE_VERSION="${6:-19}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

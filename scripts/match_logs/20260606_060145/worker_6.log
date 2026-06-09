@@ -1,5 +1,0 @@
-=== Worker 6 start ===
-Running matches: games_per_side=50, depth=8, max_plies=150, movetime_ms=10, fen_or_book=book125, version_a=v16, version_b=v2
-
-Batch 1/2: v16 white vs v2 black, 50 games
-Invalid FEN: book125

@@ -13,7 +13,7 @@ namespace {
 
 engine::EngineVersion parse_version(int v) {
   if (v == 30) {
-    return engine::EngineVersion::V30_TimeManagement;
+    return engine::EngineVersion::V30_FutilityPruning;
   }
   if (v == 29) {
     return engine::EngineVersion::V29_LazySMP;
@@ -100,8 +100,8 @@ engine::EngineVersion parse_version(int v) {
 }
 
 const char* version_name(engine::EngineVersion v) {
-  if (v == engine::EngineVersion::V30_TimeManagement) {
-    return "v30-time";
+  if (v == engine::EngineVersion::V30_FutilityPruning) {
+    return "v30-futility";
   }
   if (v == engine::EngineVersion::V29_LazySMP) {
     return "v29-lazy-smp";

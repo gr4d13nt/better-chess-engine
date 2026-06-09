@@ -189,17 +189,9 @@ bool should_stop(SearchState& st) {
     return false;
   }
   const auto now = std::chrono::steady_clock::now();
-  if (st.use_time_management && now >= st.hard_deadline) {
-    st.stopped = true;
-    if (st.shared_stop != nullptr) {
-      st.shared_stop->store(true, std::memory_order_relaxed);
-    }
-    return true;
-  }
   if (now >= st.deadline) {
     st.stopped = true;
-    // v29: single hard deadline. v30: soft per-depth stop stays thread-local.
-    if (!st.use_time_management && st.shared_stop != nullptr) {
+    if (st.shared_stop != nullptr) {
       st.shared_stop->store(true, std::memory_order_relaxed);
     }
     return true;
@@ -263,7 +255,7 @@ int evaluate_for_side_to_move(const Board& board, EngineVersion eval_profile) {
       eval_profile == EngineVersion::V27_PVS ||
       eval_profile == EngineVersion::V28_FutilityLmp ||
       eval_profile == EngineVersion::V29_LazySMP ||
-      eval_profile == EngineVersion::V30_TimeManagement) {
+      eval_profile == EngineVersion::V30_FutilityPruning) {
     white_eval = evaluate_v24(board);
   } else if (eval_profile == EngineVersion::V23_Space) {
     white_eval = evaluate_v23(board);

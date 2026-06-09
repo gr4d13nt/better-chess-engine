@@ -98,7 +98,7 @@ SearchResult lazy_smp_search(Board& board, const SearchConfig& cfg, int thread_c
 
 SearchResult search_best_move(Board& board, const SearchConfig& cfg) {
   if ((cfg.version == EngineVersion::V29_LazySMP ||
-       cfg.version == EngineVersion::V30_TimeManagement) &&
+       cfg.version == EngineVersion::V30_FutilityPruning) &&
       cfg.movetime_ms > 0) {
     const int thread_count = resolve_thread_count(cfg.num_threads);
     if (thread_count > 1) {

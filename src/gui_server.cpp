@@ -22,7 +22,7 @@ namespace {
 std::optional<engine::EngineVersion> parse_version(int v) {
   switch (v) {
     case 30:
-      return engine::EngineVersion::V30_TimeManagement;
+      return engine::EngineVersion::V30_FutilityPruning;
     case 29:
       return engine::EngineVersion::V29_LazySMP;
     case 28:

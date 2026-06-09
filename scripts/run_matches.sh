@@ -50,7 +50,7 @@ set -euo pipefail
 #   v27 = v26 search/eval + principal-variation search (PVS / null-window)
 #   v28 = v27 search/eval + late-move pruning (LMP) at depth 2–3
 #   v29 = v28 search/eval + lazy SMP (timed search only, multi-thread)
-#   v30 = v29 search/eval + time management (soft stop + depth budget)
+#   v30 = v29 search/eval + futility pruning (depth 1–3)
 
 GAMES_PER_SIDE="${1:-2}"
 DEPTH="${2:-3}"

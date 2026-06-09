@@ -15,12 +15,19 @@ namespace engine {
 namespace {
 
 bool version_uses_v28_kernel(EngineVersion v) {
-  return v == EngineVersion::V28_FutilityLmp || v == EngineVersion::V29_LazySMP ||
-         v == EngineVersion::V30_TimeManagement;
+  return v == EngineVersion::V28_FutilityLmp || v == EngineVersion::V29_LazySMP;
+}
+
+bool version_uses_v30_kernel(EngineVersion v) {
+  return v == EngineVersion::V30_FutilityPruning;
+}
+
+bool version_uses_v28_or_v30_kernel(EngineVersion v) {
+  return version_uses_v28_kernel(v) || version_uses_v30_kernel(v);
 }
 
 bool version_uses_v27_pvs_root(EngineVersion v) {
-  return v == EngineVersion::V27_PVS || version_uses_v28_kernel(v);
+  return v == EngineVersion::V27_PVS || version_uses_v28_or_v30_kernel(v);
 }
 
 }  // namespace
@@ -72,7 +79,7 @@ SearchResult search_best_move_single(Board& board, const SearchConfig& cfg) {
                       cfg.version == EngineVersion::V25_OpeningBook ||
                       cfg.version == EngineVersion::V26_LMR ||
                       cfg.version == EngineVersion::V27_PVS ||
-                      version_uses_v28_kernel(cfg.version);
+                      version_uses_v28_or_v30_kernel(cfg.version);
   const bool use_root_pv = cfg.version == EngineVersion::V11_TTHashMove ||
                            cfg.version == EngineVersion::V12_CheckExtension ||
                            cfg.version == EngineVersion::V13_MopUpEval ||
@@ -90,7 +97,7 @@ SearchResult search_best_move_single(Board& board, const SearchConfig& cfg) {
                            cfg.version == EngineVersion::V25_OpeningBook ||
                            cfg.version == EngineVersion::V26_LMR ||
                            cfg.version == EngineVersion::V27_PVS ||
-                           version_uses_v28_kernel(cfg.version);
+                           version_uses_v28_or_v30_kernel(cfg.version);
   const bool persistent_tt = cfg.version == EngineVersion::V20_PersistentTT ||
                              cfg.version == EngineVersion::V21_PassedPawns ||
                              cfg.version == EngineVersion::V22_ExtendedPawnStructure ||
@@ -99,7 +106,7 @@ SearchResult search_best_move_single(Board& board, const SearchConfig& cfg) {
                              cfg.version == EngineVersion::V25_OpeningBook ||
                              cfg.version == EngineVersion::V26_LMR ||
                              cfg.version == EngineVersion::V27_PVS ||
-                             version_uses_v28_kernel(cfg.version);
+                             version_uses_v28_or_v30_kernel(cfg.version);
   if (use_tt && cfg.local_tt == nullptr) {
     if (!persistent_tt || cfg.clear_transposition_table) {
       tt_clear();
@@ -128,6 +135,9 @@ SearchResult search_best_move_single(Board& board, const SearchConfig& cfg) {
         ok = negamax_v1_no_pruning(board, depth - 1, st, child_score);
       } else if (version_uses_v27_pvs_root(cfg.version)) {
         const auto run_child = [&](int ca, int cb) -> bool {
+          if (version_uses_v30_kernel(cfg.version)) {
+            return negamax_v30_tt(board, depth - 1, ca, cb, st, child_score);
+          }
           if (version_uses_v28_kernel(cfg.version)) {
             return negamax_v28_tt(board, depth - 1, ca, cb, st, child_score);
           }
@@ -208,7 +218,7 @@ SearchResult search_best_move_single(Board& board, const SearchConfig& cfg) {
       cfg.version == EngineVersion::V25_OpeningBook ||
       cfg.version == EngineVersion::V26_LMR ||
       cfg.version == EngineVersion::V27_PVS ||
-      version_uses_v28_kernel(cfg.version) ||
+      version_uses_v28_or_v30_kernel(cfg.version) ||
       cfg.version == EngineVersion::V23_Space ||
       cfg.version == EngineVersion::V22_ExtendedPawnStructure ||
       cfg.version == EngineVersion::V21_PassedPawns ||
@@ -222,7 +232,7 @@ SearchResult search_best_move_single(Board& board, const SearchConfig& cfg) {
         cfg.version == EngineVersion::V25_OpeningBook ||
         cfg.version == EngineVersion::V26_LMR ||
         cfg.version == EngineVersion::V27_PVS ||
-        version_uses_v28_kernel(cfg.version)) {
+        version_uses_v28_or_v30_kernel(cfg.version)) {
       eval_profile = EngineVersion::V24_HangingPieces;
     } else if (cfg.version == EngineVersion::V23_Space) {
       eval_profile = EngineVersion::V23_Space;
@@ -293,21 +303,13 @@ SearchResult search_best_move_single(Board& board, const SearchConfig& cfg) {
   SearchState st{};
   st.use_time = true;
   init_search_state(st);
-  const bool use_time_management = cfg.version == EngineVersion::V30_TimeManagement;
-  st.use_time_management = use_time_management;
-
-  const auto search_start = std::chrono::steady_clock::now();
-  const auto hard_deadline =
-      search_start + std::chrono::milliseconds(cfg.movetime_ms);
-  st.hard_deadline = hard_deadline;
-  if (!use_time_management) {
-    st.deadline = hard_deadline;
-  }
+  const auto deadline =
+      std::chrono::steady_clock::now() + std::chrono::milliseconds(cfg.movetime_ms);
+  st.deadline = deadline;
 
   SearchResult best_complete{};
   Move pv_move{};
   const int max_depth = cfg.depth > 0 ? cfg.depth : kMaxSearchDepth;
-  int last_depth_ms = 0;
   for (int d = 1; d <= max_depth; ++d) {
     const int search_depth = d + cfg.smp_depth_offset;
     if (search_depth > max_depth) {
@@ -315,29 +317,11 @@ SearchResult search_best_move_single(Board& board, const SearchConfig& cfg) {
     }
 
     const auto now = std::chrono::steady_clock::now();
-    if (now >= hard_deadline) {
+    if (now >= deadline) {
       break;
     }
 
-    if (use_time_management && d > 1 && last_depth_ms > 0) {
-      const auto remaining_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                                    hard_deadline - now)
-                                    .count();
-      if (remaining_ms <= 0 || remaining_ms < (last_depth_ms * 135) / 100) {
-        break;
-      }
-    }
-
-    if (use_time_management) {
-      const auto remaining_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                                    hard_deadline - now)
-                                    .count();
-      const int slice_ms = static_cast<int>((remaining_ms * 88) / 100);
-      st.deadline = now + std::chrono::milliseconds(std::max(slice_ms, 1));
-    }
-
     st.stopped = false;
-    const auto depth_start = std::chrono::steady_clock::now();
     if (use_root_pv) {
       prioritize_move(moves, pv_move);
     }
@@ -359,15 +343,6 @@ SearchResult search_best_move_single(Board& board, const SearchConfig& cfg) {
     best_complete.depth_reached = search_depth;
     if (current.has_move) {
       pv_move = current.best_move;
-    }
-
-    if (use_time_management) {
-      last_depth_ms = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(
-                                           std::chrono::steady_clock::now() - depth_start)
-                                           .count());
-      if (last_depth_ms < 1) {
-        last_depth_ms = 1;
-      }
     }
   }
 

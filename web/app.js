@@ -1,5 +1,5 @@
 const VERSIONS = [
-  { id: 30, label: "v30 time mgmt" },
+  { id: 30, label: "v30 futility" },
   { id: 29, label: "v29 lazy SMP" },
   { id: 28, label: "v28 LMP" },
   { id: 27, label: "v27 PVS" },

@@ -6,7 +6,7 @@ fi
 
 set -euo pipefail
 
-# Compare timed search (v29 vs v30) across movetime budgets.
+# Compare timed search across movetime budgets (default v28 vs v29).
 #
 # Usage:
 #   ./scripts/benchmark_timed.sh [mode] [depth_cap] [version_a] [version_b]
@@ -23,13 +23,13 @@ set -euo pipefail
 #   BENCHMARK_THREADS        - num_threads arg to search_main (default 0 = auto SMP)
 #
 # Examples:
-#   ./scripts/benchmark_timed.sh sweep 8 29 30
-#   BENCHMARK_TIMED_MS="50 500 2000" ./scripts/benchmark_timed.sh suite 8 29 30
+#   ./scripts/benchmark_timed.sh sweep 8 28 29
+#   BENCHMARK_TIMED_MS="50 500 2000" ./scripts/benchmark_timed.sh suite 8 28 29
 
 MODE="${1:-sweep}"
 DEPTH_CAP="${2:-8}"
-VERSION_A="${3:-29}"
-VERSION_B="${4:-30}"
+VERSION_A="${3:-28}"
+VERSION_B="${4:-29}"
 MOVETIMES="${BENCHMARK_TIMED_MS:-10 25 50 100 250 500 1000 2000}"
 THREADS="${BENCHMARK_THREADS:-0}"
 FEN="${BENCHMARK_TIMED_FEN:-r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4}"
@@ -133,7 +133,7 @@ run_suite() {
   for ms in ${MOVETIMES}; do
     local n="${#FENS[@]}"
     local sum_depth_a=0 sum_depth_b=0
-    local v30_deeper=0 v29_deeper=0 same_depth=0 same_move=0
+    local b_deeper=0 a_deeper=0 same_depth=0 same_move=0
     local sum_real_a=0 sum_real_b=0
 
     for fen in "${FENS[@]}"; do
@@ -144,9 +144,9 @@ run_suite() {
       sum_real_a=$(awk -v a="${sum_real_a}" -v b="${real_a}" 'BEGIN{printf "%.3f", a+b}')
       sum_real_b=$(awk -v a="${sum_real_b}" -v b="${real_b}" 'BEGIN{printf "%.3f", a+b}')
       if [[ "${depth_b}" -gt "${depth_a}" ]]; then
-        v30_deeper=$((v30_deeper + 1))
+        b_deeper=$((b_deeper + 1))
       elif [[ "${depth_b}" -lt "${depth_a}" ]]; then
-        v29_deeper=$((v29_deeper + 1))
+        a_deeper=$((a_deeper + 1))
       else
         same_depth=$((same_depth + 1))
       fi
@@ -163,7 +163,7 @@ run_suite() {
 
     printf 'movetime=%-5s mean_depth v%-2s=%-5s v%-2s=%-5s | v%-2s deeper=%-2d v%-2s deeper=%-2d tie=%-2d | same_move=%d/%d | mean_real v%-2s=%ss v%-2s=%ss\n' \
       "${ms}" "${VERSION_A}" "${mean_depth_a}" "${VERSION_B}" "${mean_depth_b}" \
-      "${VERSION_B}" "${v30_deeper}" "${VERSION_A}" "${v29_deeper}" "${same_depth}" \
+      "${VERSION_B}" "${b_deeper}" "${VERSION_A}" "${a_deeper}" "${same_depth}" \
       "${same_move}" "${n}" "${VERSION_A}" "${mean_real_a}" "${VERSION_B}" "${mean_real_b}"
   done
 }

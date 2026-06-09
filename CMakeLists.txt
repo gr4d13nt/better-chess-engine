@@ -39,6 +39,7 @@ add_library(engine STATIC
   src/search/search_v26_tt.cpp
   src/search/search_v27_tt.cpp
   src/search/search_v28_tt.cpp
+  src/search/search_v30_tt.cpp
   src/search/search_ordering.cpp
   src/search/search_eval_phase.cpp
   src/search/search_eval_layered.cpp
@@ -173,3 +174,7 @@ add_test(NAME repetition COMMAND repetition_tests)
 add_executable(tt_tests tests/tt_tests.cpp)
 target_link_libraries(tt_tests PRIVATE engine)
 add_test(NAME tt COMMAND tt_tests)
+
+add_executable(futility_tests tests/futility_tests.cpp)
+target_link_libraries(futility_tests PRIVATE engine)
+add_test(NAME futility COMMAND futility_tests)
