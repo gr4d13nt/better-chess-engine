@@ -1,0 +1,20 @@
+=== Worker 5 start ===
+Running matches: games_per_side=4, depth=8, max_plies=150, movetime_ms=100, fen_or_book=book, version_a=v25, version_b=v30
+
+Batch 1/2: v25 white vs v30 black, 4 games
+Game (W:v25 vs B:v30) FEN=rnbqrbnk/1p3p1p/p3p1p1/2pp4/8/2PPPPP1/PP5P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v30) FEN=knbrqbnr/1pp2p1p/p5p1/3pp3/3P4/1PP1P2P/P4PP1/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Game (W:v25 vs B:v30) FEN=knbrqbnr/p3ppp1/1p5p/2pp4/5P2/1P2P1PP/P1PP4/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v25 vs B:v30) FEN=rnbqrbnk/pp4pp/2pp4/4pp2/8/2PP1PPP/PP2P3/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+Batch 2/2: v30 white vs v25 black, 4 games
+Game (W:v30 vs B:v25) FEN=knbrqbnr/p3p2p/1ppp1pp1/8/8/1PPPP1P1/P4P1P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v30 vs B:v25) FEN=rnbqrbnk/p5pp/1p2p3/2pp1p2/2PP4/P3P3/1P3PPP/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 1/2-1/2 threefold-repetition
+Game (W:v30 vs B:v25) FEN=knbrqbnr/2p2ppp/pp6/3pp3/3P4/2P1PPP1/PP5P/RNBQRBNK\ w\ -\ -\ 0\ 1 -> result 1-0 checkmate
+Game (W:v30 vs B:v25) FEN=rnbqrbnk/1pp3pp/p2p1p2/4p3/2P2P2/1P1P2P1/P3P2P/KNBRQBNR\ w\ -\ -\ 0\ 1 -> result 0-1 checkmate
+
+=== Match Summary ===
+Total games: 8
+v25 wins: 1
+v30 wins: 5
+draws:   2
+=== Worker 5 end ===

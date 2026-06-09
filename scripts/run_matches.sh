@@ -51,6 +51,12 @@ set -euo pipefail
 #   v28 = v27 search/eval + late-move pruning (LMP) at depth 2–3
 #   v29 = v28 search/eval + lazy SMP (timed search only, multi-thread)
 #   v30 = v29 search/eval + futility pruning (depth 1–3)
+#
+# Elo baselines (scripts/elo_baselines.sh):
+#   historical  = v5  — milestone progress (v6–v24)
+#   development = v25 — recent tuning (v26+)
+#   ./scripts/run_baseline_match.sh development 30
+#   ./scripts/run_elo_ladder.sh all 30          # full v6–v30 ladder (many hours)
 
 GAMES_PER_SIDE="${1:-2}"
 DEPTH="${2:-3}"
